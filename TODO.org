@@ -1,0 +1,39 @@
+* BLOCKED (needs some [[id:aefca2bd-2352-4e5b-a81b-de88cd138af4][transformation]]) investigate
+** WHat, in order (per file), do the should-be-column rows look like?
+   :PROPERTIES:
+   :ID:       c806aaf5-8748-450f-96ee-14516157acba
+   :END:
+   Hopefully they always start with "EMPLEADOS PÚBLICOS",
+   have a few "NIVEL *" values after that,
+   then "TRABAJADORES OFICIALES"
+   and maybe (so far I haven't seen any) a set of values after that,
+   and then the totals.
+* select files
+** Start with all files F such that
+*** the "agency ancestor" of F is A
+    where agency ancestor = nearest ancestor folder at the level of agency
+*** F is the only descendent of A matching regex "planta|cargo"
+    using case-insensitive matching
+* transformation strategy
+  serial
+** select rectangle
+   serial
+*** Delete all but first sheet.
+*** Delete all rows until the first that matches DENOMINACIÓN DE CARGOS
+    maybe with a regex to finesse the tilde
+*** Find where the first column becomes "endish"
+    where "endish" = permanently empty (from there on),
+    *or* contains an expression like "RESUMEN - ANTEPROYECTO PLANTA DE PERSONAL"
+*** delete that row and all subsequent rows
+** delete empty rows in rectangle
+** create a boolean "should-be-column" colun
+   :PROPERTIES:
+   :ID:       aefca2bd-2352-4e5b-a81b-de88cd138af4
+   :END:
+*** how to define it
+    True for each row in which "grado" is missing.
+*** why
+    It seems to be missing at every category,
+    and at none of the empleados.
+*** PITFALL: sometimes there are two "grado" columns
+** BLOCKED (needs [[id:c806aaf5-8748-450f-96ee-14516157acba][investigation]]) : make "should-be-column" rows a column
