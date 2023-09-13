@@ -31,7 +31,7 @@ def searchDirectory (
 
 # From 175 agencies, this identifies 161 candidate files.
 planta_files = searchDirectory (
-  pattern = "planta.*\.xls.$",
+  pattern = "planta.*\.xls.$", # Matches both "xlsx" and "xlsm" extensions.
   path0 = agency_responses
 )
 
