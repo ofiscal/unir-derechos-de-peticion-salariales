@@ -8,12 +8,12 @@
    then "TRABAJADORES OFICIALES"
    and maybe (so far I haven't seen any) a set of values after that,
    and then the totals.
-* select files
-** Start with all files F such that
-*** the "agency ancestor" of F is A
-    where agency ancestor = nearest ancestor folder at the level of agency
-*** F is the only descendent of A matching regex "planta|cargo"
-    using case-insensitive matching
+* find all files F such that
+** DONE F matches regex "planta|cargo.*\.xls."
+** the "agency ancestor" of F is A
+   where agency ancestor = nearest ancestor folder at the level of agency
+** F is the only descendent of A matching regex "planta|cargo"
+   using case-insensitive matching
 * transformation strategy
   serial
 ** select rectangle
