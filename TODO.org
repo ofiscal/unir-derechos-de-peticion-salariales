@@ -32,7 +32,15 @@
 *** replace missing values in the fourth row with ""
 *** set header to the concatenation of first four rows
 *** drop first four rows
-** drop all columns matching "total" with no "grado"
+** lowercase column names
+** UNNEEDED: drop, or worry at all about, total columns
+*** what that would be
+    drop all columns matching "total" in the name,
+    for which "grado" missing
+*** why it isn't needed
+    I'll drop those with the other rows that aren't real rows,
+    and since the totals are last they won't interfere
+    with the new "was rows" column either.
 ** create a boolean "should-be-column" column
    :PROPERTIES:
    :ID:       aefca2bd-2352-4e5b-a81b-de88cd138af4
@@ -43,4 +51,14 @@
     It seems to be missing at every category,
     and at none of the empleados.
 *** PITFALL: sometimes there are two "grado" columns
+** lowercase the "cargo name" for all rows that should be columns
+** drop all rows that have now been transcribed as columns
 ** BLOCKED (needs [[id:c806aaf5-8748-450f-96ee-14516157acba][investigation]]) : make "should-be-column" rows a column
+* use exceptions
+** try to think of all possible errors
+*** regexes don't match
+*** header doesn't make sense
+** structure
+*** keep two dictionaries: failures and successes
+*** the keys of both dictionaries are paths to tables
+*** the error is an enum type indicating what failed
