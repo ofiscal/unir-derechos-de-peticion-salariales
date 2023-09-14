@@ -10,10 +10,13 @@ basename = os.path.splitext ( example_file ) [0]
 
 x = pd.read_excel ( example_file )
 
-up_left_corner_regex = "denominaci.n" # to identify the "Denominación de Cargos" cell.
+first_interesting_row = (
+  x . iloc[:,0] # ASSUMPTION: It's in the first column.
+  . str.match ( "denominaci.n", # to identify "Denominación de Cargos"
+                case = False )
+  . fillna ( False )
+  . argmax () )
 
-first_row = (
-  x . iloc[:,0]
   . str.match ( up_left_corner_regex,
                 case = False )
   . fillna ( False )
