@@ -97,3 +97,27 @@ y.columns = (
 y = y.iloc[5:]
 
 
+#################################
+# Convert non-rows to column data
+#################################
+
+z = y.copy()
+
+z ["top kind of empleado"] = np.where (
+    ( z["denominación de cargos:1"]
+      . str.match ( "|".join ( [ "empleado.* p.blico",
+                                 "TRABAJADOR.* OFICIAL.*", ] ),
+                    case = False ) ),
+    z["denominación de cargos:1"] . str.lower(),
+    np.nan )
+
+z ["top kind of empleado, temp"] = (
+  z ["top kind of empleado"] . copy() )
+
+z ["top kind of empleado"] = (
+  z ["top kind of empleado"]
+  . fillna ( method = "ffill" ) )
+
+z = ( z[ z["top kind of empleado, temp"] . isnull() ]
+      . drop ( columns =
+               ["top kind of empleado, temp"] ) )
