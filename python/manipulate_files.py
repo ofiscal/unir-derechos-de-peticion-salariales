@@ -3,27 +3,19 @@ import os
 import pandas as pd
 import re
 
+import python.manipulate_files_defs as defs
+
 
 example_file = "data/input/agency_responses/Unidad de información y Análisis Financiero/1.10. Formularios Planta anteproyecto 2024.xlsm UIAF.xlsm"
 
 x = pd.read_excel ( example_file )
 
 
-####################################
-# Drop the first rows we don't need.
-####################################
+########################
+# Start manipulating it.
+########################
 
-# The row index of the cell in the first column,
-# if any, matching the regex "denominaci.n".
-first_denominacion_row : int = (
-  x . iloc[:,0] # ASSUMPTION: It's in the first column.
-  . str.match ( "denominaci.n", # to identify "Denominación de Cargos"
-                case = False )
-  . fillna ( False )
-  . argmax () )
-
-# Drop all rows before `first_denominacion_row`.
-x = x[first_denominacion_row:]
+x = defs.strip_leading_rows ( x )
 
 
 ###################################
