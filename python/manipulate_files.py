@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pandas as pd
 import re
@@ -80,12 +81,19 @@ for i in [0,1,2,3]: # fill remaining missing values with ""
 
 y.columns = (
   y[0:5] # concatentate the first *four* rows
-  . apply ( ( lambda column:
-              ":".join ( [ i for i
-                           in column . astype(str)
-                           if i # drop empty strings
-                          ] ) ),
-            axis = 0 ) ) # to apply to columns, not rows
+  . apply (
+    ( lambda column:
+      ":".join ( [ i for i
+                   in column . astype(str)
+                   if i # drop empty strings
+                  ] )
+      . lower () # increases the probability of matching column names
+                 # across data from different agencies
+      . replace ( " \n", " " )
+     ),
+    axis = 0 ) ) # to apply to columns, not rows
 
 # Drop the rows that defined the header.
 y = y.iloc[5:]
+
+

@@ -32,7 +32,7 @@
 *** replace missing values in the fourth row with ""
 *** set header to the concatenation of first four rows
 *** drop first four rows
-** lowercase column names
+** DONE lowercase column names
 ** UNNEEDED: drop, or worry at all about, total columns
 *** what that would be
     drop all columns matching "total" in the name,
