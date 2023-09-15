@@ -6,3 +6,6 @@ docker run --name unir -itd          \
 docker exec -it unir bash
 
 docker stop unir && docker rm unir
+
+# because `pytest` does not find local modules by default
+PYTHONPATH=.:$PYTHONPATH pytest python/manipulate_files_test.py
