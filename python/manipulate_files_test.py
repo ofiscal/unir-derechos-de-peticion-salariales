@@ -1,4 +1,5 @@
 import numpy as np
+from   numpy import nan
 import pandas as pd
 import re
 #
@@ -64,9 +65,9 @@ def test_strip_trailing_rows ():
       assert False # This would be test failure.
 
 def test_strip_empty_rows ():
-  df = pd.DataFrame ( [ [ np.nan, np.nan ],
-                        [ 3, np.nan ],
-                        [ 3, 4 ] ] )
+  df = pd.DataFrame ( [ [ nan, nan ],
+                        [ 3  , nan ],
+                        [ 3  , 4 ] ] )
   assert ( defs.strip_empty_rows ( df )
            . equals ( df[1:] ) )
 
@@ -77,14 +78,14 @@ def test_assemble_header ():
         [ # The first nan here becomes "".
           # All the others in the first three rows are filled with
           # the previous non-nan value.
-          np.nan, ""    , 3     , np.nan, 5        ],
+          nan   , ""    , 3     , nan   , 5        ],
         [ 1     , 2     , 3     , 4     , 5        ],
-        [ 1     , np.nan, 3     , np.nan, np.nan   ],
+        [ 1     , nan   , 3     , nan   , nan      ],
         [ # this row has no effect on the resulting names
-          np.nan, np.nan, np.nan, np.nan, np.nan   ],
+          nan   , nan   , nan   , nan   , nan      ],
         [ # Tricky: even the nan after the 4 becomes ""
           # in this row, unlike the others.
-          np.nan, np.nan, np.nan, 4     , np.nan   ],
+          nan   , nan   , nan   , 4     , nan      ],
         [ "none", "of", "this", "should", "change" ], ] ) )
     . equals (
       pd.DataFrame (

@@ -4,14 +4,21 @@ import numpy as np
 import os
 import pandas as pd
 import re
+from   typing import Dict, List, Set
 
 
 # PITFALL: This can't extend Exception and Enum simultaneously,
 # for reasons I don't understand.
-# Instead I will return `ValueError`s that *contain* `ManipError`s.
+# Instead I will return `ValueError`s
+# that *contain* these objects.
 @dataclass
-class Failure_to_Match:
+class Regex_Unmatched:
   pattern : str
+
+@dataclass
+class Column_Absent:
+  pattern : str
+
 
 def series_matches_regex (
     pattern : str,
@@ -32,7 +39,7 @@ def strip_leading_rows ( df : pd.DataFrame
     series = df . iloc[:,0] ) # ASSUMPTION: It's in the first column.
   if not matches.any():
     raise ValueError (
-      Failure_to_Match ( pattern = denominacion_pattern ) )
+      Regex_Unmatched ( pattern = denominacion_pattern ) )
   else:
     return df [ matches.argmax(): ] # `argmax` gives the *first* index
                                     # achieving the maximum value (True).
@@ -46,7 +53,7 @@ def strip_trailing_rows ( df : pd.DataFrame
     series = df . iloc[:,0] ) # ASSUMPTION: It's in the first column.
   if not matches.any():
     raise ValueError (
-      Failure_to_Match ( pattern = total_pattern ) )
+      Regex_Unmatched ( pattern = total_pattern ) )
   else:
     last_matching_index = (
       matches [ matches ] # Since `matches` is boolean,

@@ -32,7 +32,7 @@ z = x3.copy()
 z ["top kind of empleado"] = np.where (
     ( z["denominación de cargos:1"]
       . str.match ( "|".join ( [ "empleado.* p.blico",
-                                 "TRABAJADOR.* OFICIAL.*", ] ),
+                                 "trabajador.* oficial.*", ] ),
                     case = False ) ),
     z["denominación de cargos:1"] . str.lower(),
     np.nan )
