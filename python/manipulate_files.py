@@ -16,31 +16,7 @@ x = pd.read_excel ( example_file )
 ########################
 
 x = defs.strip_leading_rows ( x )
-
-
-###################################
-# Drop the last rows we don't need.
-###################################
-
-# True where the first column matches the regex "total".
-total_rows : pd.Series = (
-  x . iloc[:,0] # ASSUMPTION: It's in the first column.
-  . str.match ( "total",
-                case = False )
-  . fillna ( False ) )
-
-# True for every row which is a total row or followed by one.
-total_row_or_followed_by_one : pd.Series = pd.Series (
-  ( ( total_rows . index )
-    <=
-    ( total_rows [ total_rows ] . index # indices where total_rows is True
-      . max() ) ),
-  index = total_rows . index )
-
-# Discard every row of x for which
-# neither it nor any row after it
-# matches the regex "total".
-x = x[: total_row_or_followed_by_one.argmin() ]
+x = defs.strip_trailing_rows ( x )
 
 
 #################
