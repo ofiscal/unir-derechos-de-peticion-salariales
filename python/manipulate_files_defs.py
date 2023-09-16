@@ -72,7 +72,6 @@ def strip_empty_rows ( df : pd.DataFrame
 
 def assemble_header ( df : pd.DataFrame
                       ) -> pd.DataFrame:
-
   n_header_rows = 5
 
   for i in range(n_header_rows-1):
@@ -106,13 +105,13 @@ def assemble_header ( df : pd.DataFrame
   # Drop the rows that defined the header.
   return df.iloc[n_header_rows:]
 
-def false_rows_to_column (
+def false_rows_to_column_using_regex (
     source_column_name : str,
     patterns           : List [ str ],
     new_column_name    : str,
     df                 : pd.DataFrame,
 ) ->                     pd.DataFrame:
-  """Creates a column with the matches to a regex. Fills those matches forward into all unmatched cells. Drops the rows that matched the regex, and adds the column to the frame."""
+  """Creates a new column with the matches to a regex. Fills those matches forward into all unmatched cells. Drops the rows that matched the regex."""
   if not source_column_name in df.columns:
     raise ValueError (
       Column_Absent ( pattern = source_column_name ) )

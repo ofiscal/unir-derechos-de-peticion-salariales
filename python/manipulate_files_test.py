@@ -97,9 +97,9 @@ def test_assemble_header ():
                     "3:4:3:4",
                     "5:5:3" ] ) ) )
 
-def test_false_rows_to_column ():
+def test_false_rows_to_column_using_regex ():
   assert (
-    defs.false_rows_to_column (
+    defs.false_rows_to_column_using_regex (
       source_column_name = "source",
       patterns           = ["a","b"],
       new_column_name    = "sink",
@@ -114,3 +114,17 @@ def test_false_rows_to_column ():
         "more"   : [  1 , 2 , 4 , 6 , 7  ],
         "sink"   : [ nan,nan,"a","b","b" ],
       } ) ) )
+
+  try:
+    defs.false_rows_to_column_using_regex (
+      source_column_name = "source",
+      patterns           = ["a","b"],
+      new_column_name    = "sink",
+      df = pd.DataFrame ( {
+        "badly named source" : ["1","2","a","4","b","6","7"],
+        "more"   :             [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
+      } ) )
+  except ValueError as e:
+    assert e.args[0] == defs.Column_Absent ( "source" )
+  else:
+    assert False # This would be test failure.
