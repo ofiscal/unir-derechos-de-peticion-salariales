@@ -20,46 +20,14 @@ x = pd.read_excel ( example_file )
 x0 = defs.strip_leading_rows  ( x  ) . copy()
 x1 = defs.strip_trailing_rows ( x0 ) . copy()
 x2 = defs.strip_empty_rows    ( x1 ) . copy()
-
-
-##############################
-# Create header (column names)
-##############################
-
-y = x2.copy()
-
-for i in [0,1,2]:
-  y.iloc[i] = ( # Fill non-missing values forward
-    y.iloc[i] . fillna ( method = "ffill" ) )
-
-for i in [0,1,2,3]: # fill remaining missing values with ""
-                    # (which will be ignored in column names).
-  y.iloc[i] = (
-    y.iloc[i] . fillna ( "" ) )
-
-y.columns = (
-  y[0:5] # concatentate the first *four* rows
-  . apply (
-    ( lambda column:
-      ":".join ( [ i for i
-                   in column . astype(str)
-                   if i # drop empty strings
-                  ] )
-      . lower () # increases the probability of matching column names
-                 # across data from different agencies
-      . replace ( " \n", " " )
-     ),
-    axis = 0 ) ) # to apply to columns, not rows
-
-# Drop the rows that defined the header.
-y = y.iloc[5:]
+x3 = defs.assemble_header     ( x2 ) . copy()
 
 
 #################################
 # Convert non-rows to column data
 #################################
 
-z = y.copy()
+z = x3.copy()
 
 z ["top kind of empleado"] = np.where (
     ( z["denominación de cargos:1"]

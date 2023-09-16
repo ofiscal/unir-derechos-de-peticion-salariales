@@ -62,3 +62,39 @@ def strip_empty_rows ( df : pd.DataFrame
       # True for each entirely-null row
       lambda row: row.all(),
       axis = 1 ) ] # to operate on rows, not columns
+
+def assemble_header ( df : pd.DataFrame
+                      ) -> pd.DataFrame:
+
+  n_header_rows = 5
+
+  for i in range(n_header_rows-1):
+    # In each header row but the last,
+    # fill non-missing values forward.
+    # PITFALL: Since the last row is just a series of integers,
+    # filling it forward like the rest would destroy information.
+    df.iloc[i] = (
+      df.iloc[i] . fillna ( method = "ffill" ) )
+
+  for i in range(n_header_rows):
+    # Fill remaining missing values with "".
+    # These will be ignored in column names.
+    df.iloc[i] = (
+      df.iloc[i] . fillna ( "" ) )
+
+  df.columns = ( # Concatentate those header columns.
+    df[0:n_header_rows]
+    . apply (
+      ( lambda column:
+        ":".join ( [ i for i
+                     in column . astype(str)
+                     if i # drops the empty strings
+                    ] )
+        . lower () # increases the probability of matching column names
+                   # across data from different agencies
+        . replace ( " \n", " " )
+       ),
+      axis = 0 ) ) # to apply to columns, not rows
+
+  # Drop the rows that defined the header.
+  return df.iloc[n_header_rows:]

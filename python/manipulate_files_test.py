@@ -69,3 +69,29 @@ def test_strip_empty_rows ():
                         [ 3, 4 ] ] )
   assert ( defs.strip_empty_rows ( df )
            . equals ( df[1:] ) )
+
+def test_assemble_header ():
+  assert (
+    defs.assemble_header (
+      pd.DataFrame ( [
+        [ # The first nan here becomes "".
+          # All the others in the first three rows are filled with
+          # the previous non-nan value.
+          np.nan, ""    , 3     , np.nan, 5        ],
+        [ 1     , 2     , 3     , 4     , 5        ],
+        [ 1     , np.nan, 3     , np.nan, np.nan   ],
+        [ # this row has no effect on the resulting names
+          np.nan, np.nan, np.nan, np.nan, np.nan   ],
+        [ # Tricky: even the nan after the 4 becomes ""
+          # in this row, unlike the others.
+          np.nan, np.nan, np.nan, 4     , np.nan   ],
+        [ "none", "of", "this", "should", "change" ], ] ) )
+    . equals (
+      pd.DataFrame (
+        [ [ "none", "of", "this", "should", "change" ] ],
+        index = [5],
+        columns = [ "1:1",
+                    "2:1",
+                    "3:3:3",
+                    "3:4:3:4",
+                    "5:5:3" ] ) ) )
