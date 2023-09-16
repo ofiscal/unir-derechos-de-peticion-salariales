@@ -115,15 +115,15 @@ def false_rows_to_column_using_regex (
   if not source_column_name in df.columns:
     raise ValueError (
       Column_Absent ( pattern = source_column_name ) )
+  patterns_str : str = "|".join ( patterns )
   df [ new_column_name ] = np.where (
     ( df [ source_column_name ]
-      . str.match ( "|".join ( patterns ),
-                    case = False ) ),
+      . str.match ( patterns_str, case = False ) ),
     df [ source_column_name ] . str.lower(),
     np.nan )
   if not df [ new_column_name ] . any():
     raise ValueError (
-      Regex_Unmatched ( pattern = source_column_name ) )
+      Regex_Unmatched ( pattern = patterns_str ) )
   df [ new_column_name + "-temp" ] = (
     # This copy is not filled forward like the original.
     df [ new_column_name ] . copy() )

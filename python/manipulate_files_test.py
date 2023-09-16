@@ -128,3 +128,19 @@ def test_false_rows_to_column_using_regex ():
     assert e.args[0] == defs.Column_Absent ( "source" )
   else:
     assert False # This would be test failure.
+
+  try:
+    patterns           = ["a","b"]
+    defs.false_rows_to_column_using_regex (
+      source_column_name = "source",
+      patterns           = patterns,
+      new_column_name    = "sink",
+      df = pd.DataFrame ( {
+        "source" : ["-","-","-","-","-","-","-"],
+        "more"   : [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
+      } ) )
+  except ValueError as e:
+    assert e.args[0] == defs.Regex_Unmatched (
+      "|".join ( patterns ) )
+  else:
+    assert False # This would be test failure.
