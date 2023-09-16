@@ -112,6 +112,7 @@ def false_rows_to_column_using_regex (
     df                 : pd.DataFrame,
 ) ->                     pd.DataFrame:
   """Creates a new column with the matches to a regex. Fills those matches forward into all unmatched cells. Drops the rows that matched the regex."""
+
   if not source_column_name in df.columns:
     raise ValueError (
       Column_Absent ( pattern = source_column_name ) )

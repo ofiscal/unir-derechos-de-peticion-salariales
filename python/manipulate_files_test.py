@@ -3,12 +3,12 @@ from   numpy import nan
 import pandas as pd
 import re
 #
-import python.manipulate_files_defs as defs
+from   python.manipulate_files_defs import *
 
 
 def test_series_matches_regex ():
   assert (
-    defs.series_matches_regex (
+    series_matches_regex (
       pattern = ".*x.*",
       series = pd.Series ( [ "axa",
                              "y" ] ) )
@@ -20,21 +20,21 @@ def test_strip_leading_rows ():
     good_data = pd.DataFrame (
       { 0 : ["strip", "this", "garbage",
              "denominación de cargos","moo","bark",] } )
-    assert ( defs.strip_leading_rows ( good_data )
+    assert ( strip_leading_rows ( good_data )
              . equals ( good_data[3:] ) )
 
   if True: # Test the case of bad data --
            # i.e. that Exception-raising works.
     try:
-      defs.strip_leading_rows (
+      strip_leading_rows (
         pd.DataFrame ( { 0 : ["no","match","here"] } ) )
     except ValueError as e:
       # PITFALL: Enums cannot be compared directly!
       # (They are all equal if they're all of the same type.)
       # Must call `value` first.
-      assert e.args[0].pattern == defs.denominacion_pattern
+      assert e.args[0].pattern == denominacion_pattern
     else:
-      assert False # This would be test failure.
+      assert False
 
 def test_strip_trailing_rows ():
   if True: # Test the case of good data
@@ -48,32 +48,32 @@ def test_strip_trailing_rows ():
               "strip",
               "this",
               "garbage", ] } )
-    assert ( defs.strip_trailing_rows ( good_data )
+    assert ( strip_trailing_rows ( good_data )
              . equals ( good_data[:-3] ) )
 
   if True: # Test the case of bad data --
            # i.e. that Exception-raising works.
     try:
-      defs.strip_trailing_rows (
+      strip_trailing_rows (
         pd.DataFrame ( { 0 : ["no","match","here"] } ) )
     except ValueError as e:
       # PITFALL: Enums cannot be compared directly!
       # (They are all equal if they're all of the same type.)
       # Must call `value` first.
-      assert e.args[0].pattern == defs.total_pattern
+      assert e.args[0].pattern == total_pattern
     else:
-      assert False # This would be test failure.
+      assert False
 
 def test_strip_empty_rows ():
   df = pd.DataFrame ( [ [ nan, nan ],
                         [ 3  , nan ],
                         [ 3  , 4 ] ] )
-  assert ( defs.strip_empty_rows ( df )
+  assert ( strip_empty_rows ( df )
            . equals ( df[1:] ) )
 
 def test_assemble_header ():
   assert (
-    defs.assemble_header (
+    assemble_header (
       pd.DataFrame ( [
         [ # The first nan here becomes "".
           # All the others in the first three rows are filled with
@@ -99,7 +99,7 @@ def test_assemble_header ():
 
 def test_false_rows_to_column_using_regex ():
   assert (
-    defs.false_rows_to_column_using_regex (
+    false_rows_to_column_using_regex (
       source_column_name = "source",
       patterns           = ["a","b"],
       new_column_name    = "sink",
@@ -116,7 +116,7 @@ def test_false_rows_to_column_using_regex ():
       } ) ) )
 
   try:
-    defs.false_rows_to_column_using_regex (
+    false_rows_to_column_using_regex (
       source_column_name = "source",
       patterns           = ["a","b"],
       new_column_name    = "sink",
@@ -125,13 +125,13 @@ def test_false_rows_to_column_using_regex ():
         "more"   :             [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
       } ) )
   except ValueError as e:
-    assert e.args[0] == defs.Column_Absent ( "source" )
+    assert e.args[0] == Column_Absent ( "source" )
   else:
-    assert False # This would be test failure.
+    assert False
 
   try:
     patterns           = ["a","b"]
-    defs.false_rows_to_column_using_regex (
+    false_rows_to_column_using_regex (
       source_column_name = "source",
       patterns           = patterns,
       new_column_name    = "sink",
@@ -140,7 +140,8 @@ def test_false_rows_to_column_using_regex ():
         "more"   : [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
       } ) )
   except ValueError as e:
-    assert e.args[0] == defs.Regex_Unmatched (
+    assert e.args[0] == Regex_Unmatched (
       "|".join ( patterns ) )
   else:
-    assert False # This would be test failure.
+    assert False
+
