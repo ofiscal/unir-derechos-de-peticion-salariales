@@ -29,7 +29,7 @@ x4 = defs.false_rows_to_column_using_regex (
   new_column_name    = "empleado kind 1",
   df                 = x3 )
 
-x5 = defs.false_rows_to_column_using_regex (
+x5 = defs.false_rows_to_column_based_on_missing_values (
   source_column_name         = "denominación de cargos:1",
   missing_values_column_name = "grado:2",
   new_column_name            = "empleado kind 2",
