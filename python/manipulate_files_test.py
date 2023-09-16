@@ -62,3 +62,10 @@ def test_strip_trailing_rows ():
       assert e.args[0].pattern == defs.total_pattern
     else:
       assert False # This would be test failure.
+
+def test_strip_empty_rows ():
+  df = pd.DataFrame ( [ [ np.nan, np.nan ],
+                        [ 3, np.nan ],
+                        [ 3, 4 ] ] )
+  assert ( defs.strip_empty_rows ( df )
+           . equals ( df[1:] ) )

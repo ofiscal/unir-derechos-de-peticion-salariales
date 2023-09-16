@@ -15,28 +15,18 @@ x = pd.read_excel ( example_file )
 # Start manipulating it.
 ########################
 
-x = defs.strip_leading_rows ( x )
-x = defs.strip_trailing_rows ( x )
+# Keeping a copy of each stage makes debugging easy.
 
-
-#################
-# Drop empty rows
-#################
-
-# True for every completely empty row of x.
-row_is_empty : pd.Series = (
-  x.isnull()
-  . apply ( lambda row: row.all(),
-            axis = 1 ) ) # to operate on rows, not columns
-
-x = x [ ~ row_is_empty ]
+x0 = defs.strip_leading_rows  ( x  ) . copy()
+x1 = defs.strip_trailing_rows ( x0 ) . copy()
+x2 = defs.strip_empty_rows    ( x1 ) . copy()
 
 
 ##############################
 # Create header (column names)
 ##############################
 
-y = x.copy()
+y = x2.copy()
 
 for i in [0,1,2]:
   y.iloc[i] = ( # Fill non-missing values forward

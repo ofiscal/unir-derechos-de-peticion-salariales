@@ -53,3 +53,12 @@ def strip_trailing_rows ( df : pd.DataFrame
                           # this keeps only the true values
       . index . max() )
     return df [ df.index <= last_matching_index ]
+
+def strip_empty_rows ( df : pd.DataFrame
+                       ) -> pd.DataFrame:
+  return df [
+    ~ df . isnull() # a boolean table
+    . apply ( # a boolean series that is
+      # True for each entirely-null row
+      lambda row: row.all(),
+      axis = 1 ) ] # to operate on rows, not columns
