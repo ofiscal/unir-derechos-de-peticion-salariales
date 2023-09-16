@@ -19,6 +19,9 @@ class Regex_Unmatched:
 class Column_Absent:
   pattern : str
 
+@dataclass
+class Nothing_Missing:
+  pass
 
 def series_matches_regex (
     pattern : str,
@@ -131,6 +134,47 @@ def false_rows_to_column_using_regex (
   df [ new_column_name ] = (
     df [ new_column_name ]
     . fillna ( method = "ffill" ) )
+  return (
+    df [ # drop all rows that matched a pattern
+      df [ new_column_name + "-temp" ]
+      . isnull() ]
+    . drop ( columns = [new_column_name + "-temp"] ) )
+
+# TODO ? PITFALL: This duplicates some code in
+# `false_rows_to_column_using_regex`.
+# It would be better to refactor both into a single function
+# that takes a lambda to be run on each row
+# that identifies whether it is a false row.
+def false_rows_to_column_based_on_missing_values (
+    source_column_name         : str, # the new column takes values from here
+    missing_values_column_name : str, # missing values here identify rows
+                                      # to generate the new column from
+    new_column_name            : str,
+    df                         : pd.DataFrame,
+) ->                             pd.DataFrame:
+  """Creates a new column with values from each cell in the source column where the corresponding cell in the missing values column is missing. Fills those valules forward. Deletes the source rows."""
+
+  if not source_column_name in df.columns:
+    raise ValueError (
+      Column_Absent ( pattern = source_column_name ) )
+  if not missing_values_column_name in df.columns:
+    raise ValueError (
+      Column_Absent ( pattern = missing_values_column_name ) )
+
+  df [ new_column_name ] = np.where (
+    df [ missing_values_column_name ] . isnull(),
+    df [ source_column_name ] . str.lower(),
+    np.nan )
+  if not df [ new_column_name ] . any():
+    raise ValueError ( Nothing_Missing() )
+
+  df [ new_column_name + "-temp" ] = (
+    # This copy is not filled forward like the original.
+    df [ new_column_name ] . copy() )
+  df [ new_column_name ] = (
+    df [ new_column_name ]
+    . fillna ( method = "ffill" ) )
+
   return (
     df [ # drop all rows that matched a pattern
       df [ new_column_name + "-temp" ]

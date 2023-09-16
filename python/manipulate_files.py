@@ -21,9 +21,16 @@ x0 = defs.strip_leading_rows  ( x  ) . copy()
 x1 = defs.strip_trailing_rows ( x0 ) . copy()
 x2 = defs.strip_empty_rows    ( x1 ) . copy()
 x3 = defs.assemble_header     ( x2 ) . copy()
+
 x4 = defs.false_rows_to_column_using_regex (
   source_column_name = "denominación de cargos:1",
   patterns           = [ "empleado.* p.blico",
                          "trabajador.* oficial.*", ],
   new_column_name    = "empleado kind 1",
   df                 = x3 )
+
+x5 = defs.false_rows_to_column_using_regex (
+  source_column_name         = "denominación de cargos:1",
+  missing_values_column_name = "grado:2",
+  new_column_name            = "empleado kind 2",
+  df                         = x4 )
