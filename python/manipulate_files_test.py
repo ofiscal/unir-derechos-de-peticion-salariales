@@ -96,3 +96,21 @@ def test_assemble_header ():
                     "3:3:3",
                     "3:4:3:4",
                     "5:5:3" ] ) ) )
+
+def test_false_rows_to_column ():
+  assert (
+    defs.false_rows_to_column (
+      source_column_name = "source",
+      patterns           = ["a","b"],
+      new_column_name    = "sink",
+      df = pd.DataFrame ( {
+        "source" : ["1","2","a","4","b","6","7"],
+        "more"   : [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
+      } ) )
+    . reset_index ( drop = True )
+    . equals (
+      pd.DataFrame ( {
+        "source" : [ "1","2","4","6","7" ],
+        "more"   : [  1 , 2 , 4 , 6 , 7  ],
+        "sink"   : [ nan,nan,"a","b","b" ],
+      } ) ) )

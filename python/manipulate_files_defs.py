@@ -105,3 +105,34 @@ def assemble_header ( df : pd.DataFrame
 
   # Drop the rows that defined the header.
   return df.iloc[n_header_rows:]
+
+def false_rows_to_column (
+    source_column_name : str,
+    patterns           : List [ str ],
+    new_column_name    : str,
+    df                 : pd.DataFrame,
+) ->                     pd.DataFrame:
+  """Creates a column with the matches to a regex. Fills those matches forward into all unmatched cells. Drops the rows that matched the regex, and adds the column to the frame."""
+  if not source_column_name in df.columns:
+    raise ValueError (
+      Column_Absent ( pattern = source_column_name ) )
+  df [ new_column_name ] = np.where (
+    ( df [ source_column_name ]
+      . str.match ( "|".join ( patterns ),
+                    case = False ) ),
+    df [ source_column_name ] . str.lower(),
+    np.nan )
+  if not df [ new_column_name ] . any():
+    raise ValueError (
+      Regex_Unmatched ( pattern = source_column_name ) )
+  df [ new_column_name + "-temp" ] = (
+    # This copy is not filled forward like the original.
+    df [ new_column_name ] . copy() )
+  df [ new_column_name ] = (
+    df [ new_column_name ]
+    . fillna ( method = "ffill" ) )
+  return (
+    df [ # drop all rows that matched a pattern
+      df [ new_column_name + "-temp" ]
+      . isnull() ]
+    . drop ( columns = [new_column_name + "-temp"] ) )
