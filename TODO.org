@@ -1,8 +1,5 @@
 * BLOCKED (needs some [[id:aefca2bd-2352-4e5b-a81b-de88cd138af4][transformation]]) investigate
 ** WHat, in order (per file), do the should-be-column rows look like?
-   :PROPERTIES:
-   :ID:       c806aaf5-8748-450f-96ee-14516157acba
-   :END:
    Hopefully they always start with "EMPLEADOS PÚBLICOS",
    have a few "NIVEL *" values after that,
    then "TRABAJADORES OFICIALES"
@@ -14,7 +11,7 @@
    where agency ancestor = nearest ancestor folder at the level of agency
 ** F is the only descendent of A matching regex "planta|cargo"
    using case-insensitive matching
-* transformation strategy
+* MAYBE DONE transformation strategy
   serial
 ** DONE select rectangle
    serial
@@ -33,7 +30,19 @@
 *** set header to the concatenation of first four rows
 *** drop first four rows
 ** DONE lowercase column names
-** UNNEEDED: drop, or worry at all about, total columns
+** handle rows that signify columnar data
+*** create a boolean "should-be-column" column
+    :PROPERTIES:
+    :ID:       aefca2bd-2352-4e5b-a81b-de88cd138af4
+    :END:
+**** how to define it
+     True for each row in which "grado" is missing.
+**** why
+     It seems to be missing at every category,
+     and at none of the empleados.
+**** PITFALL: sometimes there are two "grado" columns
+*** drop all rows that have now been transcribed as columns
+** UNNEEDED : drop, or worry at all about, total columns
 *** what that would be
     drop all columns matching "total" in the name,
     for which "grado" missing
@@ -41,20 +50,9 @@
     I'll drop those with the other rows that aren't real rows,
     and since the totals are last they won't interfere
     with the new "was rows" column either.
-** create a boolean "should-be-column" column
-   :PROPERTIES:
-   :ID:       aefca2bd-2352-4e5b-a81b-de88cd138af4
-   :END:
-*** how to define it
-    True for each row in which "grado" is missing.
-*** why
-    It seems to be missing at every category,
-    and at none of the empleados.
-*** PITFALL: sometimes there are two "grado" columns
-** lowercase the "cargo name" for all rows that should be columns
-** drop all rows that have now been transcribed as columns
-** BLOCKED (needs [[id:c806aaf5-8748-450f-96ee-14516157acba][investigation]]) : make "should-be-column" rows a column
-* use exceptions
+** MAYBE : lowercase the "cargo name" for all rows that should be columns
+   Not sure it matters since all my regex matches are case-insensitive.
+* DONE use exceptions
 ** try to think of all possible errors
 *** regexes don't match
 *** header doesn't make sense
@@ -62,3 +60,7 @@
 *** keep two dictionaries: failures and successes
 *** the keys of both dictionaries are paths to tables
 *** the error is an enum type indicating what failed
+* process all files
+** keep two accumulator dictionary, both keyed with filepaths
+*** one with data frames for values
+*** the with errors for values

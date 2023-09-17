@@ -91,7 +91,7 @@ def assemble_header ( df : pd.DataFrame
     df.iloc[i] = (
       df.iloc[i] . fillna ( "" ) )
 
-  df.columns = ( # Concatentate those header columns.
+  df.columns = pd.Index ( # Concatentate those header columns.
     df[0:n_header_rows]
     . apply (
       ( lambda column:
