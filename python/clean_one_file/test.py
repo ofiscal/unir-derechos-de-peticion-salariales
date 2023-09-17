@@ -3,7 +3,7 @@ from   numpy import nan
 import pandas as pd
 import re
 #
-from   python.manipulate_files_defs import *
+from   python.clean_one_file.defs import *
 
 
 def test_series_matches_regex ():

@@ -180,3 +180,23 @@ def false_rows_to_column_based_on_missing_values (
       df [ new_column_name + "-temp" ]
       . isnull() ]
     . drop ( columns = [new_column_name + "-temp"] ) )
+
+def format_tutela_response (
+    source_file : str # the path to the file, from the project root
+) -> pd.DataFrame:
+  return (
+    false_rows_to_column_based_on_missing_values (
+      source_column_name         = "denominación de cargos:1",
+      missing_values_column_name = "grado:2",
+      new_column_name            = "empleado kind 2",
+      df = false_rows_to_column_using_regex (
+        source_column_name = "denominación de cargos:1",
+        patterns           = [ "empleado.* p.blico",
+                               "trabajador.* oficial.*", ],
+        new_column_name    = "empleado kind 1",
+        df = assemble_header (
+          strip_empty_rows (
+            strip_trailing_rows (
+              strip_leading_rows (
+                pd.read_excel (
+                  source_file ) ) ) ) ) ) ) )
