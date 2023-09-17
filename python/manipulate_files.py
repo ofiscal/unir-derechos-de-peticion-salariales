@@ -4,6 +4,7 @@ import pandas as pd
 import re
 from   typing import Dict, List, Set, Tuple
 #
+from python.find_files import unique_planta_candidates
 from python.manipulate_files_defs import *
 
 
@@ -35,9 +36,13 @@ def collect_formatted_responses (
   successes  : Dict [ str, pd.DataFrame ] = {}
   for f in source_files:
     try:
-      df = format_tutela_response
+      df = format_tutela_response ( f )
     except Exception as e:
       errors[f] = e
     else:
       successes[f] = df
   return ( successes, errors )
+
+ps = unique_planta_candidates ()
+( successes, errors ) = (
+  collect_formatted_responses ( ps ) )

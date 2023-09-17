@@ -4,3 +4,4 @@ data/input/agency_responses/*/
 git-comment*
 temp*
 *.pyc
+TAGS*
