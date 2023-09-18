@@ -96,7 +96,7 @@ and it is the *only* file in that agency's folder to do so."""
                     # PITFALL: \. might work as well as \\. for now,
                     # but is deprecated. See
                     # https://stackoverflow.com/a/66666859/916142
-          "(planta|1\\.10).*\\.xls.*$" ),
+          "(cargos|n[oó]mina|planta|1\\.10|110).*\\.xls.*$" ),
         path0 = agency_response_folder ) ) )
   planta_candidates = [
     v[0] . descendent for v in genealogies . values() if len(v) == 1 ]
