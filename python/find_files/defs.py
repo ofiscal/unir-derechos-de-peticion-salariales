@@ -90,17 +90,17 @@ and it is the *only* file in that agency's folder to do so."""
   genealogies = (
     build_genealogies_by_agency (
       basenames_matching_pattern_in_folder ( # returns the planta files
-        pattern = # must match both "xlsx" and "xlsm" extensions
+        pattern = # must match .xls, .xlsx and .xlsm extensions
                   # PITFALL: \. will be deprecated soon,
                   # as an invalid escape sequence; \\. is preferred.
                   # See https://stackoverflow.com/a/66666859/916142
-        "planta.*\\.xls.$",
+        "planta.*\\.xls.*$",
         path0 = agency_response_folder ) ) )
   planta_candidates = [
     v[0] . descendent for v in genealogies . values() if len(v) == 1 ]
   multiple_planta_file_agencies = [
     v[0] . agency     for v in genealogies . values() if len(v) != 1 ]
-  no_planta_file_agencies = (
+  no_planta_file_agencies = list (
     {   os.path.normpath ( a ) for a in agencies }
     - { os.path.normpath ( a ) for a in genealogies . keys() } )
   return ( planta_candidates,

@@ -10,4 +10,4 @@ from typing import Dict, List, Set, Tuple
  ) = planta_candidates_and_ambiguous_agencies ()
 
 ( successes, errors
- ) = collect_formatted_responses ( planta_candidates ) )
+ ) = collect_formatted_responses ( planta_candidates )
