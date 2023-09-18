@@ -90,11 +90,13 @@ and it is the *only* file in that agency's folder to do so."""
   genealogies = (
     build_genealogies_by_agency (
       basenames_matching_pattern_in_folder ( # returns the planta files
-        pattern = # must match .xls, .xlsx and .xlsm extensions
-                  # PITFALL: \. will be deprecated soon,
-                  # as an invalid escape sequence; \\. is preferred.
-                  # See https://stackoverflow.com/a/66666859/916142
-        "planta.*\\.xls.*$",
+        pattern = ( # Name must match "planta" or "1.10".
+                    # Extension must match .xls, .xlsx or .xlsm.
+                    #
+                    # PITFALL: \. might work as well as \\. for now,
+                    # but is deprecated. See
+                    # https://stackoverflow.com/a/66666859/916142
+          "(planta|1\\.10).*\\.xls.*$" ),
         path0 = agency_response_folder ) ) )
   planta_candidates = [
     v[0] . descendent for v in genealogies . values() if len(v) == 1 ]
