@@ -13,6 +13,9 @@ will need to be identified manually.
 
 # handle the errors
 
+Some work on this has been done;
+see the two files matching the path `python/error_hunting.*`.
+
 `python/main.py` generates not just a dictionary called `successes`
 of 118 successesfully interpreted data frames,
 but also a dictionary called `errors` of 21 errors.

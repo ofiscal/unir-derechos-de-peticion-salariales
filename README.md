@@ -16,12 +16,18 @@ due to space constraints, so copy those into `data/input/agency_responses`.
 
 I recommend running it interactively.
 Copy the code from `python/main.py` into the Python repl of your choice,
-from the root folder of the project. This will define three objects:
+from the root folder of the project. This will define some objects:
 
-`planta_paths` is a list of paths to the Excel tables
+`planta_candidates` is a list of paths to the Excel tables
 that the code will attempt to interpret.
 
-`successes` is a dictionary whose keys are paths to tables,
+`multiple_planta_file_agencies` is a list of (paths to)
+agencies with more than one file named "planta".
+
+`no_planta_file_agencies` is a list of (paths to)
+agencies with no file named "planta".
+
+`successes` is a dictionary whose keys are values in `planta_candidates`,
 and whose values are Pandas data frames.
 
 `errors` is a dictionary whose keys are again paths to tables,
