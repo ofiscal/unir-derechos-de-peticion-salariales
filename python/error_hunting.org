@@ -1,0 +1,31 @@
+* denominacion errors
+** errors, determined
+*** needs to read sheet 2
+**** data/input/agency_responses/DPS/1.10. Formularios planta anteproyecto 2024 DPS.xlsm
+     use sheet 2:
+       Formulario 4- Planta 1228
+**** data/input/agency_responses/RNEC/1.10 Formularios planta anteproyecto 2024 RNEC.xlsx
+     use sheet 2:
+       Formulario 4- Planta_
+**** data/input/agency_responses/211200 ANM/1.10/Formulario planta anteproyecto 2024.xlsx
+     use sheet 2:
+       FORMULARIO 4- COSTO PLANTA 339
+**** data/input/agency_responses/323100 CAM/1.10/1.10. Formularios Planta anteproyecto 2024.cleaned.xlsm.xlsx
+     read sheet 2
+       Formulario 4-Planta
+**** data/input/agency_responses/ESAP/05-03-00 ESAP Formulario 1.10. Planta anteproyecto 2024.xlsm
+*** needs to read sheet 3 -- which is *not* the first to have a "denominacion" column
+**** data/input/agency_responses/COLOMBIA COMPRA EFICIENTE/1.10/1.10 Formularios Planta Anteproyecto 2024.cleaned.xlsm.xlsx
+     use sheet 3
+       Formulario 4-Planta TOTAL
+     and not, confusingly, sheet 2, which is very similar
+**** data/input/agency_responses/Unidad de Gestión Pensional y Parafiscales/1.10. Formularios Planta anteproyecto 2024.UGPP.xlsx
+*** needs to read a different column, so far only the second
+    "denominacion" is in the second column, not the first
+**** data/input/agency_responses/160101 - Policía Gestión General/1.10  FOMULARIO 4 - 4A PLANTA - 160101 - 2024.xlsx
+**** data/input/agency_responses/DEPARTAMENTO NACIONAL DE PLANEACION/1.10/Formularios Planta anteproyecto DNP 2024 F.cleaned.xlsm.xlsx
+*** data incomplete (the sending agency's fault)
+    data/input/agency_responses/INCI/22-10-00 INCI Formulario 1.10. Planta anteproyecto 2024.xlsm
+** impossible!
+*** data/input/agency_responses/MINISTERIO DE EDUCACIÓN NACIONAL/22-01-01 MEN Formulario 1.10. Planta anteproyecto 2024.xlsm
+    pd.read_excel *already* gives something other than what I see if I open the original in LibreOffice.
