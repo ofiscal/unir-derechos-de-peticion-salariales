@@ -186,7 +186,7 @@ def format_tutela_response (
             strip_trailing_rows (
               strip_leading_rows (
                 pd.read_excel (
-                  io    =             source_file . path,
-                  sheet =             source_file . sheet ),
+                  io         =        source_file . path,
+                  sheet_name =        source_file . sheet ),
                 denominacion_column = source_file . denominacion_column
               ) ) ) ) ) ) )
