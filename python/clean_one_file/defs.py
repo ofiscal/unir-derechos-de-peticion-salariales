@@ -1,27 +1,9 @@
-from   dataclasses import dataclass
-from   enum import Enum, unique, auto
 import numpy as np
 import os
 import pandas as pd
 import re
 from   typing import Dict, List, Set
 
-
-# PITFALL: This can't extend Exception and Enum simultaneously,
-# for reasons I don't understand.
-# Instead I will return `ValueError`s
-# that *contain* these objects.
-@dataclass
-class Regex_Unmatched:
-  pattern : str
-
-@dataclass
-class Column_Absent:
-  pattern : str
-
-@dataclass
-class Nothing_Missing:
-  pass
 
 def series_matches_regex (
     pattern : str,
