@@ -3,6 +3,8 @@ import os
 import pandas as pd
 import re
 from   typing import Dict, List, Set
+#
+from   python.clean_one_file.types import *
 
 
 def series_matches_regex (
@@ -16,12 +18,15 @@ def series_matches_regex (
 
 denominacion_pattern = "denominaci.n" # hoping for "Denominación de Cargos"
 
-def strip_leading_rows ( df : pd.DataFrame
-                         ) -> pd.DataFrame:
+def strip_leading_rows (
+    df                  : pd.DataFrame,
+    denominacion_column : int,
+) -> pd.DataFrame:
   """Strips the rows before the first match of the regex "denominaci.n"."""
   matches = series_matches_regex (
     pattern = denominacion_pattern,
-    series = df . iloc[:,0] ) # ASSUMPTION: It's in the first column.
+    series = df . iloc [ :,
+                         denominacion_column ] )
   if not matches.any():
     raise ValueError (
       Regex_Unmatched ( pattern = denominacion_pattern ) )
@@ -164,7 +169,7 @@ def false_rows_to_column_based_on_missing_values (
     . drop ( columns = [new_column_name + "-temp"] ) )
 
 def format_tutela_response (
-    source_file : str # the path to the file, from the project root
+    source_file : File_Load_Instruction
 ) -> pd.DataFrame:
   return (
     false_rows_to_column_based_on_missing_values (
@@ -181,4 +186,7 @@ def format_tutela_response (
             strip_trailing_rows (
               strip_leading_rows (
                 pd.read_excel (
-                  source_file ) ) ) ) ) ) ) )
+                  io    =             source_file . path,
+                  sheet =             source_file . sheet ),
+                denominacion_column = source_file . denominacion_column
+              ) ) ) ) ) ) )

@@ -11,7 +11,7 @@ from typing import Dict, List, Set, Tuple
 from python.clean_one_file.types import File_Load_Instruction
 
 
-exceptional_instructions_list : List [ File_Load_Instruction ] = [
+exceptional_instruction_list : List [ File_Load_Instruction ] = [
   File_Load_Instruction (
     path = "MINISTERIO DE SALUD Y PROTECCION SOCIAL/190101. formato 4 y 4a 117123-.xls" ),
   File_Load_Instruction (
@@ -45,6 +45,12 @@ exceptional_instructions_list : List [ File_Load_Instruction ] = [
     path = "DEPARTAMENTO NACIONAL DE PLANEACION/1.10/Formularios Planta anteproyecto DNP 2024 F.cleaned.xlsm.xlsx",
     denominacion_column = 1 ),
 ]
+
+exceptional_instruction_dict : Dict [ str, File_Load_Instruction ] = {
+  # This spends a little bit of redundant space,
+  # to make it easy to find the instruction for a given path.
+  v . path : v
+  for v in exceptional_instruction_list }
 
 agencies_with_incomplete_planta_file = [
   "INCI",

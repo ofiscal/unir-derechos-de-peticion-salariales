@@ -1,8 +1,11 @@
-from python.find_files.defs import (
+from   typing import Dict, List, Set, Tuple
+#
+from   python.collect import collect_formatted_responses
+import python.exceptions.discoveries as discoveries
+from   python.find_files.defs import (
   planta_candidates_and_ambiguous_agencies,
   agencies )
-from python.collect import collect_formatted_responses
-from typing import Dict, List, Set, Tuple
+from   python.clean_one_file.types import *
 
 
 # Define some paths.
@@ -19,4 +22,9 @@ if True: # Test that all are accounted for.
   assert sum ( lengths ) == len ( agencies )
 
 ( successes, errors
- ) = collect_formatted_responses ( planta_candidates )
+ ) = collect_formatted_responses (
+   discoveries.exceptional_instruction_list
+   + [ File_Load_Instruction ( c )
+       for c in planta_candidates
+       if not c in ( discoveries.exceptional_instruction_dict
+                     . keys () ) ] )

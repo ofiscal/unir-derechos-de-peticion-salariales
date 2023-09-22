@@ -20,14 +20,16 @@ def test_strip_leading_rows ():
     good_data = pd.DataFrame (
       { 0 : ["strip", "this", "garbage",
              "denominación de cargos","moo","bark",] } )
-    assert ( strip_leading_rows ( good_data )
+    assert ( strip_leading_rows ( good_data,
+                                  denominacion_column = 0 )
              . equals ( good_data[3:] ) )
 
   if True: # Test the case of bad data --
            # i.e. that Exception-raising works.
     try:
       strip_leading_rows (
-        pd.DataFrame ( { 0 : ["no","match","here"] } ) )
+        pd.DataFrame ( { 0 : ["no","match","here"] } ),
+        denominacion_column = 0 )
     except ValueError as e:
       # PITFALL: Enums cannot be compared directly!
       # (They are all equal if they're all of the same type.)
