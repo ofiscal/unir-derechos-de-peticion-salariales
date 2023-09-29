@@ -54,6 +54,7 @@ exceptional_instruction_dict : Dict [ str, File_Load_Instruction ] = {
 
 agencies_with_incomplete_planta_file = [
   "INCI",
+  "Ministerio de Cultura",
 ]
 
 agencies_with_no_planta_file = [
@@ -102,3 +103,10 @@ agencies_with_unreadable_planta_file = [
   # Pandas shows something different from what Excel or Google Sheets show.
   "MINISTERIO DE EDUCACIÓN NACIONAL",
 ]
+
+agencias_with_no_problem_we_can_solve = (
+  agencies_with_incomplete_planta_file +
+  agencies_with_no_planta_file         +
+  agencies_with_multiple_planta_files  +
+  agencies_with_unreadable_planta_file
+)

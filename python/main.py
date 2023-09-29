@@ -24,7 +24,9 @@ if True: # Test that all are accounted for.
 ( successes, errors
  ) = collect_formatted_responses (
    discoveries.exceptional_instruction_list
-   + [ File_Load_Instruction ( c )
-       for c in planta_candidates
-       if not c in ( discoveries.exceptional_instruction_dict
-                     . keys () ) ] )
+   []
+   + [ # non-exceptions
+     File_Load_Instruction ( c )
+     for c in planta_candidates
+     if not c in ( discoveries.exceptional_instruction_dict
+                   . keys () ) ] )

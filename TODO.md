@@ -1,3 +1,9 @@
+# homogenize `python/exceptions/discoveries.py`
+
+Only some of those omit the path `data/input/agency_responses`.
+
+# skip everything in `agencias_with_no_problem_we_can_solve`
+
 # expand paths consumed
 
 There are around 170 agencies that responded.
