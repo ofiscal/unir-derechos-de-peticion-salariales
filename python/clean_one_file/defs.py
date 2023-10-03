@@ -16,7 +16,7 @@ def series_matches_regex (
                          case = False )
            . fillna ( False ) )
 
-denominacion_pattern = "denominaci.n" # hoping for "Denominación de Cargos"
+denominacion_pattern = ".*denominaci.n.*cargo.*" # hoping for "Denominación de Cargos"
 
 def strip_leading_rows (
     df                  : pd.DataFrame,

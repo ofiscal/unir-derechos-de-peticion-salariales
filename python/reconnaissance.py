@@ -16,37 +16,32 @@ def count_denom_cells ( df : pd.DataFrame
   return ( df
            . astype ( str )
            . applymap ( lambda s:
-                        bool ( re.match( denominacion_pattern,
-                                         s ) ) )
+                        bool ( re.match ( denominacion_pattern,
+                                          s,
+                                          flags = re.IGNORECASE ) ) )
            . astype (int)
            . sum() . sum() ) # two-dimensional sum
-
-@dataclass
-class Sheet_recon:
-  sheet       : int
-  denom_cells : int
-
-@dataclass
-class File_recon:
-  filename    : str
-  sheet       : int
 
 ( planta_candidates,
   multiple_planta_file_agencies,
   no_planta_file_agencies
  ) = planta_candidates_and_ambiguous_agencies ()
 
-file_results = {}
+file_results : Dict [ str, # filename
+                      Dict [ str, # sheet name
+                             int # number of "denom cargo" cells
+                            ] ] = {}
 for f in planta_candidates:
-  n_sheets = len ( pd.ExcelFile( f )
-                 . sheet_names )
-  sheet_results = {}
-  for s in range( n_sheets ):
-    sheet_results [ f ] = Sheet_recon (
-      sheet       = s,
-      denom_cells = count_denom_cells (
-        pd.read_excel ( io         = f,
-                        sheet_name = s ) ) )
-  sheet_recons = { k:v
-                   for k,v in sheet_results.items()
-                   if v.denom_cells > 0 }
+  ef = pd.ExcelFile ( f )
+  sheet_results : Dict [ str, int ] = {}
+  for sn in ef.sheet_names:
+    sheet_results [ sn ] = count_denom_cells (
+      pd.read_excel ( io         = f,
+                      sheet_name = sn ) )
+  file_results [f] = sheet_results
+
+s = pd.Series (
+  [ sum ( file_results[k] . values() )
+    for k in file_results.keys() ] )
+
+s.describe()
