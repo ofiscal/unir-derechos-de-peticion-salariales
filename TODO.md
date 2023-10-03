@@ -4,6 +4,10 @@ Only some of those omit the path `data/input/agency_responses`.
 
 # skip everything in `agencias_with_no_problem_we_can_solve`
 
+# see if "MINISTERIO DE EDUCACIÓN NACIONAL" looks unreadable because sheets are hidden
+
+see `python/exceptions/discoveries.py`
+
 # expand paths consumed
 
 There are around 170 agencies that responded.
