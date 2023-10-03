@@ -1,6 +1,14 @@
-# homogenize `python/exceptions/discoveries.py`
+# Use relative paths wherever possible.
+
+## Use `paths_from_argument_to_files_with_names_matching_pattern` in `build_genealogies_by_agency`
+
+## Homogenize `python/exceptions/discoveries.py`.
 
 Only some of those omit the path `data/input/agency_responses`.
+
+# Find every match of `denominacion de cargos`, on every page of every spreadsheet
+
+Later can filter out instances of, say, "1.10".
 
 # skip everything in `agencias_with_no_problem_we_can_solve`
 
