@@ -30,12 +30,14 @@ because they can ignore the order of the fields. """
   descendent : str # path to an Excel table in `agency_response_folder`
   agency     : str # child (immediate descendent) of `agency_response_folder`
 
-def basenames_matching_pattern_in_folder (
+def paths_from_cwd_to_files_with_names_matching_pattern (
     pattern : str, # a regex
     path0 : str = ".",
     recursionCount = 0
 ) -> List [ str ]:
-  """Finds all files whose basenames match `pattern` in `path0` ignoring case."""
+  """Calling this on (pattern, path0)
+returns a list of paths (relative to the current working directory)
+to files whose names match `pattern`, ignoring case."""
   # Inspired by
   # https://stackoverflow.com/questions/44805898/recursively-look-for-files-and-or-directories
   acc : List [ str ] = [] # accumulates results
@@ -44,12 +46,29 @@ def basenames_matching_pattern_in_folder (
     path1 = os.path.join ( path0, dir)
     if os.path.isdir ( path1 ):
       acc = ( acc +
-              basenames_matching_pattern_in_folder ( # recurse
+              paths_from_cwd_to_files_with_names_matching_pattern ( # recurse
                 pattern = pattern,
                 path0 = path1 ) )
     elif re.search ( pattern, path1, re.IGNORECASE):
       acc.append ( path1 )
   return acc
+
+def paths_from_argument_to_files_with_names_matching_pattern (
+    pattern : str, # a regex
+    path0 : str = ".",
+) -> List [ str ]:
+  """Calling this on (pattern, path0)
+returns a list of paths (relative to `path0`)
+to files whose names match `pattern`, ignoring case."""
+  return [
+    ( path [
+        # Strip the first len(path0) characters,
+        len ( path0 ) : ]
+      . lstrip ("/") ) # Strip leading slash. (This seems clearer
+                       # than using `len (path0) + 1` above.)
+    for path in paths_from_cwd_to_files_with_names_matching_pattern (
+        pattern = pattern,
+        path0 = path0 ) ]
 
 def genealogy_from_path_to_table ( descendent : str
                           ) -> genealogy:
@@ -89,7 +108,8 @@ A file is in that first list if it includes the word "planta" in its name,
 and it is the *only* file in that agency's folder to do so."""
   genealogies = (
     build_genealogies_by_agency (
-      basenames_matching_pattern_in_folder ( # returns the planta files
+      paths_from_cwd_to_files_with_names_matching_pattern (
+        # returns the planta files
         pattern = ( # Name must match "planta" or "1.10".
                     # Extension must match .xls, .xlsx or .xlsm.
                     #
