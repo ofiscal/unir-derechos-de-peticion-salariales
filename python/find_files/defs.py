@@ -71,7 +71,7 @@ def genealogy_from_path_from_agencies_root_to_agency_table (
   )
 
 def excel_descendents_by_agency (
-    Paths : List [str] # paths relative to the input agency root
+    paths : List [str] # paths relative to the input agency root
 ) ->    Dict [ Agency, List [ Descendent ] ]:
   acc : Dict [ Agency, List [ Descendent ] ] = {}
   for g in [ genealogy_from_path_from_agencies_root_to_agency_table ( f )
