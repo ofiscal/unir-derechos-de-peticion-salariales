@@ -4,12 +4,16 @@ import os
 import pandas as pd
 from   pathlib import Path
 import re
-from   typing import Dict, List, Set, Tuple
+from   typing import Dict, GenericAlias, List, Set, Tuple
 
 
 agency_response_folder = "data/input/agency_responses/"
 agencies = glob ( # all child folders, i.e. all agencies
     agency_response_folder + "/*/" )
+
+Agency     : GenericAlias = str # a child (immediate descendent) of
+                                # `agency_response_folder`
+Descendent : GenericAlias = str # a path from an agency to an Excel file
 
 @dataclass
 class Genealogy:
@@ -27,8 +31,8 @@ of the agency folder it belongs to --some are buried deep.
 Pairs would work too, allowing me to avoid defining a class,
 but this type is easier for a reader to reason about,
 because they can ignore the order of the fields. """
-  descendent : str # path to an Excel table in `agency_response_folder`
-  agency     : str # child (immediate descendent) of `agency_response_folder`
+  descendent : Descendent
+  agency     : Agency
 
 def paths_from_cwd_to_files_with_names_matching_pattern (
     pattern : str, # a regex
@@ -55,11 +59,19 @@ to files whose names match `pattern`, ignoring case."""
 
 def paths_from_argument_to_files_with_names_matching_pattern (
     pattern : str, # a regex
-    path0 : str = ".",
-) -> List [ str ]:
+    path0 : Agency = ".",
+) -> List [ Descendent ]:
   """Calling this on (pattern, path0)
 returns a list of paths (relative to `path0`)
-to files whose names match `pattern`, ignoring case."""
+to files whose names match `pattern`, ignoring case.
+
+PITFALL: This probably only works if `path0` is within
+(and defined relative to) the current working directory.
+
+PITFALL: This is really more general than the aliases
+in the type signature suggest,
+but I'll only use it for agencies and their descendents.
+"""
   return [
     ( path [
         # Strip the first len(path0) characters,
@@ -78,6 +90,20 @@ def genealogy_from_path_from_agencies_root_to_agency_table (
     descendent = os.path.join ( * Path ( path ) . parts [1:] ),
     agency     =                  Path ( path ) . parts [0]
   )
+
+def excel_descendents_by_agency (
+    Paths : List [str] # paths relative to the input agency root
+) ->    Dict [ Agency, List [ Descendent ] ]:
+  acc : Dict [ Agency, List [ Descendent ] ] = {}
+  for g in [ genealogy_from_path_from_agencies_root_to_agency_table ( f )
+             for f in paths ]:
+    if not g.agency in acc.keys ():
+      acc [ g.agency ] = [g.descendent]
+    else:
+      acc [ g.agency ] = (
+        acc [ g.agency ]
+        + [g.descendent] )
+  return acc
 
 
 #####################
