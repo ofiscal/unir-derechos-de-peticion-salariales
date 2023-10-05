@@ -70,9 +70,22 @@ to files whose names match `pattern`, ignoring case."""
         pattern = pattern,
         path0 = path0 ) ]
 
+def genealogy_from_path_from_agencies_root_to_agency_table (
+    path : str # path relative to root of agencies input folder
+) -> Genealogy:
+  """Unlike a similarly-named and soon to be deleted function, this provides a Genealogy in which the `descendent` path is relative to the `agency`."""
+  return Genealogy (
+    descendent = os.path.join ( * Path ( path ) . parts [1:] ),
+    agency     =                  Path ( path ) . parts [0]
+  )
+
 
 #####################
 # SOON TO BE REPLACED
+
+# This code uses the earlier idiom, in which each `Genealogy`
+# defines the `descendent` relative to the current working directory,
+# rather than the `agency`.
 #####################
 
 def genealogy_from_path_from_project_root_to_agency_table (
