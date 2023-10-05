@@ -13,7 +13,7 @@ agency_response_folder = "data/input/agency_responses/"
 agencies = glob ( # all child folders, i.e. all agencies
     agency_response_folder + "/*/" )
 
-def paths_from_cwd_to_files_with_names_matching_pattern (
+def paths_from_cwd_to_filenames_matching_pattern (
     pattern : str, # a regex
     path0 : str = ".",
     recursionCount = 0
@@ -29,14 +29,14 @@ to files whose names match `pattern`, ignoring case."""
     path1 = os.path.join ( path0, dir)
     if os.path.isdir ( path1 ):
       acc = ( acc +
-              paths_from_cwd_to_files_with_names_matching_pattern ( # recurse
+              paths_from_cwd_to_filenames_matching_pattern ( # recurse
                 pattern = pattern,
                 path0 = path1 ) )
     elif re.search ( pattern, path1, re.IGNORECASE):
       acc.append ( path1 )
   return acc
 
-def paths_from_argument_to_files_with_names_matching_pattern (
+def paths_from_argument_to_filenames_matching_pattern (
     pattern : str, # a regex
     path0 : Agency = ".",
 ) -> List [ Descendent ]:
@@ -57,7 +57,7 @@ but I'll only use it for agencies and their descendents.
         len ( path0 ) : ]
       . lstrip ("/") ) # Strip leading slash. (This seems clearer
                        # than using `len (path0) + 1` above.)
-    for path in paths_from_cwd_to_files_with_names_matching_pattern (
+    for path in paths_from_cwd_to_filenames_matching_pattern (
         pattern = pattern,
         path0 = path0 ) ]
 
@@ -135,7 +135,7 @@ A file is in that first list if it includes the word "planta" in its name,
 and it is the *only* file in that agency's folder to do so."""
   genealogies = (
     build_genealogies_by_agency (
-      paths_from_cwd_to_files_with_names_matching_pattern (
+      paths_from_cwd_to_filenames_matching_pattern (
         # returns the planta files
         pattern = ( # Name must match "planta" or "1.10".
                     # Extension must match .xls, .xlsx or .xlsm.
