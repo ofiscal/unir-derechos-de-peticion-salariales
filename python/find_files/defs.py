@@ -70,12 +70,21 @@ to files whose names match `pattern`, ignoring case."""
         pattern = pattern,
         path0 = path0 ) ]
 
-def genealogy_from_path_to_table ( descendent : str
-                                  ) -> Genealogy:
+
+#####################
+# SOON TO BE REPLACED
+#####################
+
+def genealogy_from_path_from_project_root_to_agency_table (
+    descendent : str
+) -> Genealogy:
   return Genealogy (
     descendent = descendent,
     agency = os.path.join (
-      *(Path ( descendent ) . parts [:4]) ) )
+      *(Path ( descendent )
+        . parts [:4] # PITFALL: This is brittle -- it assumes
+                     # all agencies are in `data/input/agency_responses/`.
+        ) ) )
 
 def build_genealogies_by_agency (
     paths : List[str]
@@ -83,7 +92,7 @@ def build_genealogies_by_agency (
             List [ Genealogy ] ]:
   acc : Dict [ str,
                List [ Genealogy ] ] = {}
-  for g in [ genealogy_from_path_to_table ( f )
+  for g in [ genealogy_from_path_from_project_root_to_agency_table ( f )
              for f in paths ]:
     if not g.agency in acc.keys ():
       acc [ g.agency ] = [g]

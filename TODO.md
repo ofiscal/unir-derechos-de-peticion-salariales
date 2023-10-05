@@ -2,6 +2,8 @@
 
 ## Use `paths_from_argument_to_files_with_names_matching_pattern` in `build_genealogies_by_agency`
 
+or in a new, similarly-named function.
+
 ## Homogenize `python/exceptions/discoveries.py`.
 
 Only some of those omit the path `data/input/agency_responses`.
