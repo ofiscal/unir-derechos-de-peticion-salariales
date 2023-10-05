@@ -12,15 +12,15 @@ agencies = glob ( # all child folders, i.e. all agencies
     agency_response_folder + "/*/" )
 
 @dataclass
-class genealogy:
+class Genealogy:
   """
-WHAT A GENEALOGY IS:
+WHAT A `Genealogy` IS:
 This describes the filesystem hierarchy.
-In each `genealogy`, the `descendent` will descend from the `agency`.
-The `agency` field in every `genealogy`
+In each `Genealogy`, the `descendent` will descend from the `agency`.
+The `agency` field in every `Genealogy`
 will be a child of `agency_response_folder`.
 
-WHY I NEED TO USE `GENEALOGY`:
+WHY I NEED TO USE `Genealogy`:
 Not every `planta` file is a child (immediate descendent)
 of the agency folder it belongs to --some are buried deep.
 
@@ -71,8 +71,8 @@ to files whose names match `pattern`, ignoring case."""
         path0 = path0 ) ]
 
 def genealogy_from_path_to_table ( descendent : str
-                          ) -> genealogy:
-  return genealogy (
+                                  ) -> Genealogy:
+  return Genealogy (
     descendent = descendent,
     agency = os.path.join (
       *(Path ( descendent ) . parts [:4]) ) )
@@ -80,9 +80,9 @@ def genealogy_from_path_to_table ( descendent : str
 def build_genealogies_by_agency (
     paths : List[str]
 ) -> Dict [ str,
-            List [ genealogy ] ]:
+            List [ Genealogy ] ]:
   acc : Dict [ str,
-               List [ genealogy ] ] = {}
+               List [ Genealogy ] ] = {}
   for g in [ genealogy_from_path_to_table ( f )
              for f in paths ]:
     if not g.agency in acc.keys ():
