@@ -8,7 +8,7 @@
 
 from typing import Dict, List, Set, Tuple
 #
-from python.clean_one_file.types import File_Load_Instruction
+from python.types import *
 
 
 exceptional_instruction_list : List [ File_Load_Instruction ] = [

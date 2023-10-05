@@ -5,34 +5,13 @@ import pandas as pd
 from   pathlib import Path
 import re
 from   typing import Dict, GenericAlias, List, Set, Tuple
+#
+from   python.types import *
 
 
 agency_response_folder = "data/input/agency_responses/"
 agencies = glob ( # all child folders, i.e. all agencies
     agency_response_folder + "/*/" )
-
-Agency     : GenericAlias = str # a child (immediate descendent) of
-                                # `agency_response_folder`
-Descendent : GenericAlias = str # a path from an agency to an Excel file
-
-@dataclass
-class Genealogy:
-  """
-WHAT A `Genealogy` IS:
-This describes the filesystem hierarchy.
-In each `Genealogy`, the `descendent` will descend from the `agency`.
-The `agency` field in every `Genealogy`
-will be a child of `agency_response_folder`.
-
-WHY I NEED TO USE `Genealogy`:
-Not every `planta` file is a child (immediate descendent)
-of the agency folder it belongs to --some are buried deep.
-
-Pairs would work too, allowing me to avoid defining a class,
-but this type is easier for a reader to reason about,
-because they can ignore the order of the fields. """
-  descendent : Descendent
-  agency     : Agency
 
 def paths_from_cwd_to_files_with_names_matching_pattern (
     pattern : str, # a regex

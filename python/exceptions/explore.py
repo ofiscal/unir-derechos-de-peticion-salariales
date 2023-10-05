@@ -7,7 +7,7 @@ import python.exceptions.discoveries as discoveries
 from   python.find_files.defs import (
   planta_candidates_and_ambiguous_agencies,
   agencies )
-from   python.clean_one_file.types import *
+from   python.types import *
 
 
 ########################################

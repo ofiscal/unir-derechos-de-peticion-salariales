@@ -3,7 +3,7 @@ from   typing import Dict, List, Set, Tuple
 import python.collect as collect
 import python.exceptions.discoveries as discoveries
 import python.find_files.defs as find_files
-import python.clean_one_file.types as types
+from   python.types import *
 
 
 # Define some paths.
@@ -23,7 +23,7 @@ if True: # Test that all are accounted for.
  ) = collect.collect_formatted_responses (
    discoveries.exceptional_instruction_list
    + [ # non-exceptions
-     types.File_Load_Instruction ( c )
+     File_Load_Instruction ( c )
      for c in planta_candidates
      if not c in ( discoveries.exceptional_instruction_dict
                    . keys () ) ] )

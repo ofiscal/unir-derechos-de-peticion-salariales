@@ -1,8 +1,8 @@
 import pandas as pd
 from   typing import Dict, List, Set, Tuple
 #
-from python.clean_one_file.defs import format_tutela_response
-from python.clean_one_file.types import *
+from   python.clean_one_file.defs import format_tutela_response
+from   python.types import *
 
 
 def collect_formatted_responses (
