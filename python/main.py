@@ -3,8 +3,20 @@ from   typing import Dict, List, Set, Tuple
 import python.collect as collect
 import python.exceptions.discoveries as discoveries
 import python.find_files.defs as find_files
+import python.reconnaissance as recon
 from   python.types import *
 
+
+(a,b,c) = recon.denom_cell_report ()
+for (df, name) in [ (a, "agencies-with-no-denom-cell"),
+                    (b, "agencies-with-one-denom-cell"),
+                    (c, "agencies-with-multiple-denom-cells") ]:
+  df.to_csv ( name + ".csv" )
+
+
+##################
+# Needs rewriting
+##################
 
 # Define some paths.
 ( planta_candidates,             # files we want to ingest
