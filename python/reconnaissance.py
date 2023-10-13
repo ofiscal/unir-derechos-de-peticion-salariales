@@ -63,7 +63,8 @@ def all_denom_and_libre_cell_counts (
 columns = unit_of_observation + ["denom_cells", "libre_cells"].
 """
   paths = find_files.paths_from_argument_to_filenames_matching_pattern (
-    pattern = ".*\\.xls.*",
+    pattern = ".*\\.xls[a-zA-Z]*$", # excludes lock files, which end in #
+      # (and which go stale on Linux when LibreOffice exits abnormally).
     path0 = "data/input/agency_responses/" )
   eds = find_files.excel_descendents_by_agency ( paths )
 
