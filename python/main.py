@@ -8,7 +8,8 @@ from   python.types import *
 
 
 reports = recon.denom_cell_reports (
-  limit = 0 ) # process everything
+  limit = 0, # process everything
+  verbose = True, )
 for k, df in reports.items():
   df.to_csv ( k + ".csv" )
 

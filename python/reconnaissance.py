@@ -53,7 +53,11 @@ def count_cells_matching_expr_in_sheet (
            . sum() . sum() ) # two-dimensional sum
 
 def all_denom_and_libre_cell_counts (
-    limit : int = 0 # How many agencies to scan (default = all).
+    limit   : int  = 0, # How many agencies to scan (default = all).
+    verbose : bool = False, # For debugging.
+    # TODO: Exceptions would be friendlier than debugging the verbose output.
+    # Ideally, use both, as printing filenames is helpful
+    # for gauging the speed of the algorithm.
 ) -> pd.DataFrame:
   """Returns a frame with
 columns = unit_of_observation + ["denom_cells", "libre_cells"].
@@ -69,6 +73,7 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
   for k in list ( eds.keys() ) [-limit:]:
     for v in eds[k]:
       filename = os.path.join ( find_files.agency_response_folder, k, v )
+      if verbose: print(filename)
       for sn in pd.ExcelFile (filename) . sheet_names:
         new_row = pd.Series (
           { "agency"            : k,
@@ -92,9 +97,11 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
   return acc
 
 def denom_cell_reports (
-    limit : int = 0 # How many agencies to scan (default = all).
+    limit : int = 0, # How many agencies to scan (default = all).
+    verbose : bool = False,
 ) -> Dict [ str, pd.DataFrame ]:
-  df = all_denom_and_libre_cell_counts ( limit = limit )
+  df = all_denom_and_libre_cell_counts ( limit   = limit,
+                                         verbose = verbose, )
   g = ( df [ ["agency", "nice"] ]
         . groupby ( "agency" )
         . agg ( sum )
