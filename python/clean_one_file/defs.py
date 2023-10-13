@@ -4,7 +4,7 @@ import pandas as pd
 import re
 from   typing import Dict, List, Set
 #
-from   python.clean_one_file.types import *
+from   python.types import *
 
 
 def series_matches_regex (
