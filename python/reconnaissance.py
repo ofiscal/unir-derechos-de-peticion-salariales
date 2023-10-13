@@ -1,7 +1,30 @@
-# PURPOSE:
+# WHAT THIS DOES:
 # (More might be added to this.)
-# Determine how many "denominación de cargos" cells a file has.
-# If more than one, we'll have more work to do.
+# Determine how many "Denominación de Cargos" and "Libre Nombramiento"
+# cells a sheet has.
+# Build tables identifying,
+# for each sheet of each Excel file from each agency,
+# how many of those cells it has.
+#
+# WHY:
+# A summary planta file (which we don't want)
+# looks like a person-level planta file (which we want),
+# in that both contain "denominación de cargos" cells.
+# But the summary file includes a "libre nombramiento" cell too,
+# whereas the person-level ones don't.
+#
+# Therefore this program looks for sheets
+# with a denominación de cargos cell and no libre nombramiento cell.
+# A sheet is defined as "nice" if it has denominación de cargos
+# and does not have libre nombramiento.
+# The sheet reports are partitioned into three groups:
+# agencies with no nice sheet, agencies with exactly one,
+# and agencies with more than one.
+#
+# But a fourth kind of sheet is also reported on:
+# sheets with too many denominación de cargos cells.
+# The idea here is to catch sheets where someone might have
+# included both tables. Hopefully nobody did that.
 
 from   dataclasses import dataclass
 import os
@@ -9,36 +32,40 @@ import pandas as pd
 import re
 from   typing import Dict, List, Tuple
 #
-from   python.clean_one_file.defs import denominacion_pattern
+from   python.clean_one_file.defs import denominacion_pattern, libre_pattern
 import python.find_files.defs as find_files
 from   python.types import *
 
 
-def count_sheet_denom_cells ( df : pd.DataFrame
-                       ) ->  int:
+unit_of_observation = [ "agency", "file", "sheet" ]
+
+def count_cells_matching_expr_in_sheet (
+    expr : str,
+    df   : pd.DataFrame,
+) ->  int:
   return ( df
            . astype ( str )
            . applymap ( lambda s:
-                        bool ( re.match ( denominacion_pattern,
+                        bool ( re.match ( expr,
                                           s,
                                           flags = re.IGNORECASE ) ) )
            . astype (int)
            . sum() . sum() ) # two-dimensional sum
 
-def all_denom_cell_counts (
+def all_denom_and_libre_cell_counts (
     limit : int = 0 # How many agencies to scan (default = all).
 ) -> pd.DataFrame:
   """Returns a frame with
-columns = ["agency", "file", "sheet", "sheet_denom_cells"].
+columns = unit_of_observation + ["denom_cells", "libre_cells"].
 """
   paths = find_files.paths_from_argument_to_filenames_matching_pattern (
     pattern = ".*\\.xls.*",
     path0 = "data/input/agency_responses/" )
   eds = find_files.excel_descendents_by_agency ( paths )
 
-  acc = pd.DataFrame (
-    [],
-    columns = ["agency", "file", "sheet", "sheet_denom_cells"] )
+  acc = pd.DataFrame ( [],
+                       columns = ( unit_of_observation +
+                                   ["denom_cells", "libre_cells"] ) )
   for k in list ( eds.keys() ) [-limit:]:
     for v in eds[k]:
       filename = os.path.join ( find_files.agency_response_folder, k, v )
@@ -47,63 +74,49 @@ columns = ["agency", "file", "sheet", "sheet_denom_cells"].
           { "agency"            : k,
             "file"              : v,
             "sheet"             : sn,
-            "sheet_denom_cells" : count_sheet_denom_cells (
-              pd.read_excel ( io         = filename,
-                              sheet_name = sn ) )
+            "denom_cells" : count_cells_matching_expr_in_sheet (
+              expr = denominacion_pattern,
+              df   = pd.read_excel ( io         = filename,
+                                     sheet_name = sn ) ),
+            "libre_cells" : count_cells_matching_expr_in_sheet (
+              expr = libre_pattern,
+              df   = pd.read_excel ( io         = filename,
+                                     sheet_name = sn ) ),
            } )
         acc = pd.concat ( [ acc,
                             pd.DataFrame ( new_row ) . transpose() ],
                           axis = "rows" )
+  acc["nice"] = ( ( ( acc["denom_cells"] == 1 ) &
+                    ( acc["libre_cells"] == 0 ) )
+                  . astype ( int ) )
   return acc
 
-def denom_cell_report (
+def denom_cell_reports (
     limit : int = 0 # How many agencies to scan (default = all).
-) -> Tuple [
-    # The unit of observation in each of these frames is a sheet.
-    pd.DataFrame,    # agencies with no            denom cell
-    pd.DataFrame,    # agencies with exactly   one denom cell
-    pd.DataFrame, ]: # agencies with more than one denom cell
-  df = all_denom_cell_counts ( limit = limit )
-  g = ( df.groupby ( "agency" )
+) -> Dict [ str, pd.DataFrame ]:
+  df = all_denom_and_libre_cell_counts ( limit = limit )
+  g = ( df [ ["agency", "nice"] ]
+        . groupby ( "agency" )
         . agg ( sum )
         . reset_index () )
-  g = g.rename (
-    columns = {"sheet_denom_cells" : "agency_denom_cells"} )
-  df = df.merge (
-    g [[ "agency", "agency_denom_cells" ]],
-    on = "agency" )
-  return ( df [ df ["agency_denom_cells"] == 0 ],
-           df [ ( df ["agency_denom_cells"] == 1 ) &
-                ( df ["sheet_denom_cells" ] >  0 ) ],
-           df [ ( df ["agency_denom_cells"] >  1 ) &
-                ( df ["sheet_denom_cells" ] >  0 ) ],
+  g = g.rename ( columns = { "nice" : "nice_sheets" } )
+  df = df.merge ( g, on = "agency" )
+  return {
+    # The following three groups do not overlap.
+    "sheets_of_agencies_with_no_nice_sheet" :
+      df [   df ["nice_sheets"] == 0 ],
+    "nice_sheets_of_agencies_with_one_nice_sheet" :
+      df [ ( df ["nice_sheets"] == 1 ) &
+           ( df ["nice" ]       == 1 ) ],
+    "nice_sheets_of_agencies_with_multiple_nice_sheets" :
+      df [ ( df ["nice_sheets"] >  1 ) &
+           ( df ["nice" ]       == 1 ) ],
 
+    # These (non-nice) sheets could be from any of the agencies
+    # described in the preceding three tables,
+    # and might even overlap with sheets in the first of those partitions.
+    "sheets_with_multiple_denom_cells" :
+      df [   df ["denom_cells"] > 1 ] }
 
-#######################################################
-# SOON TO BE REPLACED
-# The code below does not scan all files or all sheets.
-#######################################################
-
-( planta_candidates,
-  multiple_planta_file_agencies,
-  no_planta_file_agencies
- ) = find_files.planta_candidates_and_ambiguous_agencies ()
-
-file_results : Dict [ str, # filename
-                      Dict [ str, # sheet name
-                             int # number of "denom cargo" cells
-                            ] ] = {}
-for f in planta_candidates:
-  ef = pd.ExcelFile ( f )
-  sheet_results : Dict [ str, int ] = {}
-  for sn in ef.sheet_names:
-    sheet_results [ sn ] = count_denom_cells (
-      pd.read_excel ( io         = f,
-                      sheet_name = sn ) )
-  file_results [f] = sheet_results
-
-s = pd.Series (
-  [ sum ( file_results[k] . values() )
-    for k in file_results.keys() ] )
-
-s.describe()
+# A quick way to test that.
+#   rs = denom_cell_reports ( limit = 1 )

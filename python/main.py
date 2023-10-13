@@ -7,11 +7,10 @@ import python.reconnaissance as recon
 from   python.types import *
 
 
-(a,b,c) = recon.denom_cell_report ()
-for (df, name) in [ (a, "agencies-with-no-denom-cell"),
-                    (b, "agencies-with-one-denom-cell"),
-                    (c, "agencies-with-multiple-denom-cells") ]:
-  df.to_csv ( name + ".csv" )
+reports = recon.denom_cell_reports (
+  limit = 0 ) # process everything
+for k, df in reports.items():
+  df.to_csv ( k + ".csv" )
 
 
 ##################
