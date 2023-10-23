@@ -4,10 +4,6 @@
 
 or in a new, similarly-named function.
 
-## Homogenize `python/exceptions/discoveries.py`.
-
-Only some of those omit the path `data/input/agency_responses`.
-
 # Find every match of `denominacion de cargos`, on every page of every spreadsheet
 
 Later can filter out instances of, say, "1.10".

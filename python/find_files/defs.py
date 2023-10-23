@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from   pathlib import Path
 import re
-from   typing import Dict, GenericAlias, List, Set, Tuple
+from   typing import Dict, List, Set, Tuple
 #
 from   python.types import *
 

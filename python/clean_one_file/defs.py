@@ -171,6 +171,7 @@ def false_rows_to_column_based_on_missing_values (
     . drop ( columns = [new_column_name + "-temp"] ) )
 
 def format_tutela_response (
+    agency_root : str, # the `path` of `source_file` is relative to this
     source_file : File_Load_Instruction
 ) -> pd.DataFrame:
   return (
@@ -188,7 +189,8 @@ def format_tutela_response (
             strip_trailing_rows (
               strip_leading_rows (
                 pd.read_excel (
-                  io         =        source_file . path,
-                  sheet_name =        source_file . sheet ),
+                  io         = os.path.join ( agency_root,
+                                              source_file . path ),
+                  sheet_name =                source_file . sheet ),
                 denominacion_column = source_file . denominacion_column
               ) ) ) ) ) ) )

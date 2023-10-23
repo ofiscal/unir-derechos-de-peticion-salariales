@@ -1,10 +1,10 @@
-from   dataclasses import dataclass
-from   typing import GenericAlias
+from dataclasses import dataclass
+from typing_extensions import TypeAlias
 
 
-Agency     : GenericAlias = str # a child (immediate descendent) of
-                                # `agency_response_folder`
-Descendent : GenericAlias = str # a path from an agency to an Excel file
+Agency     : TypeAlias = str # a child (immediate descendent) of
+                             # `agency_response_folder`
+Descendent : TypeAlias = str # a path from an agency to an Excel file
 
 @dataclass
 class Genealogy:

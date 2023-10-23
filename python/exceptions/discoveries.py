@@ -13,36 +13,36 @@ from python.types import *
 
 exceptional_instruction_list : List [ File_Load_Instruction ] = [
   File_Load_Instruction (
-    path = "data/input/agency_responses/MINISTERIO DE SALUD Y PROTECCION SOCIAL/190101. formato 4 y 4a 117123-.xls" ),
+    path = "MINISTERIO DE SALUD Y PROTECCION SOCIAL/190101. formato 4 y 4a 117123-.xls" ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/150800 - Defensa Civil/Defensa Civil/1.09 Formularios Anteproyecto 2024 DCC v1.xlsx",
+    path = "150800 - Defensa Civil/Defensa Civil/1.09 Formularios Anteproyecto 2024 DCC v1.xlsx",
     sheet = 4 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/DPS/1.10. Formularios planta anteproyecto 2024 DPS.xlsm",
+    path = "DPS/1.10. Formularios planta anteproyecto 2024 DPS.xlsm",
     sheet = 1 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/RNEC/1.10 Formularios planta anteproyecto 2024 RNEC.xlsx",
+    path = "RNEC/1.10 Formularios planta anteproyecto 2024 RNEC.xlsx",
     sheet = 1 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/211200 ANM/1.10/Formulario planta anteproyecto 2024.xlsx",
+    path = "211200 ANM/1.10/Formulario planta anteproyecto 2024.xlsx",
     sheet = 2 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/323100 CAM/1.10/1.10. Formularios Planta anteproyecto 2024.cleaned.xlsm.xlsx",
+    path = "323100 CAM/1.10/1.10. Formularios Planta anteproyecto 2024.cleaned.xlsm.xlsx",
     sheet = 1 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/ESAP/05-03-00 ESAP Formulario 1.10. Planta anteproyecto 2024.xlsm",
+    path = "ESAP/05-03-00 ESAP Formulario 1.10. Planta anteproyecto 2024.xlsm",
     sheet = 1 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/COLOMBIA COMPRA EFICIENTE/1.10/1.10 Formularios Planta Anteproyecto 2024.cleaned.xlsm.xlsx",
+    path = "COLOMBIA COMPRA EFICIENTE/1.10/1.10 Formularios Planta Anteproyecto 2024.cleaned.xlsm.xlsx",
     sheet = 2 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/Unidad de Gestión Pensional y Parafiscales/1.10. Formularios Planta anteproyecto 2024.UGPP.xlsx",
+    path = "Unidad de Gestión Pensional y Parafiscales/1.10. Formularios Planta anteproyecto 2024.UGPP.xlsx",
     sheet = 2 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/160101 - Policía Gestión General/1.10  FOMULARIO 4 - 4A PLANTA - 160101 - 2024.xlsx",
+    path = "160101 - Policía Gestión General/1.10  FOMULARIO 4 - 4A PLANTA - 160101 - 2024.xlsx",
     denominacion_column = 1 ),
   File_Load_Instruction (
-    path = "data/input/agency_responses/DEPARTAMENTO NACIONAL DE PLANEACION/1.10/Formularios Planta anteproyecto DNP 2024 F.cleaned.xlsm.xlsx",
+    path = "DEPARTAMENTO NACIONAL DE PLANEACION/1.10/Formularios Planta anteproyecto DNP 2024 F.cleaned.xlsm.xlsx",
     denominacion_column = 1 ),
 ]
 

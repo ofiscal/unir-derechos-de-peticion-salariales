@@ -6,6 +6,8 @@ from   python.types import *
 
 
 def collect_formatted_responses (
+    agency_root : str, # the `path` of each element of `source_files`
+                       # is relative to this
     source_files : List [ File_Load_Instruction ]
 ) -> Tuple [ Dict [ str, pd.DataFrame ],
              Dict [ str, Exception    ], ]:
@@ -13,7 +15,8 @@ def collect_formatted_responses (
   successes  : Dict [ str, pd.DataFrame ] = {}
   for f in source_files:
     try:
-      df = format_tutela_response ( f )
+      df = format_tutela_response ( agency_root = agency_root,
+                                    source_file = f )
     except Exception as e:
       errors    [f.path] = e
     else:

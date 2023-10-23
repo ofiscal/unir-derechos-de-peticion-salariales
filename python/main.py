@@ -3,6 +3,7 @@ from   typing import Dict, List, Set, Tuple
 import python.collect as collect
 import python.exceptions.discoveries as discoveries
 import python.find_files.defs as find_files
+import python.paths as paths
 import python.reconnaissance as recon
 from   python.types import *
 
@@ -33,9 +34,12 @@ if True: # Test that all are accounted for.
 
 ( successes, errors
  ) = collect.collect_formatted_responses (
-   discoveries.exceptional_instruction_list
-   + [ # non-exceptions
-     File_Load_Instruction ( c )
-     for c in planta_candidates
-     if not c in ( discoveries.exceptional_instruction_dict
-                   . keys () ) ] )
+   agency_root = paths.agency_root,
+   source_files = (
+     discoveries.exceptional_instruction_list
+     + [ # non-exceptions
+       File_Load_Instruction ( c )
+       for c in planta_candidates
+       if not c in ( discoveries.exceptional_instruction_dict
+                     . keys () )
+     ] ) )
