@@ -1,9 +1,9 @@
-# PURPOSE
+# PURPOSE:
 # This program encodes exceptional data discovered manually.
 # These include agencies which provided no planta file,
 # agencies which provided multiple candidates,
 # and planta files for which the sheet or
-# (within that sheet)# the denominacion column
+# (within that sheet) the denominacion column
 # are in an unusual place.
 
 from typing import Dict, List, Set, Tuple
