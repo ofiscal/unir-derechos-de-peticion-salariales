@@ -67,8 +67,9 @@ def strip_empty_rows ( df : pd.DataFrame
                   lambda row: row.all(),
                   axis = 1 ) ) ] # to operate on rows, not columns
 
-def assemble_header ( df : pd.DataFrame
-                      ) -> pd.DataFrame:
+def mk_header_and_drop_header_rows (
+    df : pd.DataFrame
+)     -> pd.DataFrame:
   """
   PURPOSE:
   Some rows are what I'm calling "header rows".
@@ -233,7 +234,7 @@ def format_tutela_response (
         patterns           = [ "empleado.* p.blico",
                                "trabajador.* oficial.*", ],
         new_column_name    = "empleado kind 1",
-        df = assemble_header (
+        df = mk_header_and_drop_header_rows (
           strip_empty_rows (
             strip_trailing_rows (
               strip_leading_rows (
