@@ -1,7 +1,7 @@
 from   typing import Dict, List, Set, Tuple
 #
 from   python.collect import (
-  collect_formatted_responses,
+  formatted_responses_and_errors,
   format_tutela_response )
 import python.exceptions.discoveries as discoveries
 from   python.find_files.defs import (

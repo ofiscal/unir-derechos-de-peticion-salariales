@@ -33,7 +33,7 @@ if True: # Test that all are accounted for.
   assert sum ( lengths ) == len ( find_files.agencies )
 
 ( successes, errors
- ) = collect.collect_formatted_responses (
+ ) = collect.formatted_responses_and_errors (
    agency_root = paths.agency_root,
    source_files = (
      discoveries.exceptional_instruction_list

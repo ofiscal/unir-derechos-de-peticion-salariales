@@ -5,7 +5,7 @@ from   python.clean_one_file.defs import format_tutela_response
 from   python.types import *
 
 
-def collect_formatted_responses (
+def formatted_responses_and_errors (
     agency_root : str, # the `path` of each element of `source_files`
                        # is relative to this
     source_files : List [ File_Load_Instruction ]
