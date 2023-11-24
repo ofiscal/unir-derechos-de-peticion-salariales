@@ -9,10 +9,10 @@ import python.reconnaissance as recon
 from   python.types import *
 
 
-reports = recon.denom_cell_reports (
+recon_reports = recon.denom_cell_reports (
   limit = 0, # 0 = process everything
   verbose = True, )
-for k, df in reports.items():
+for k, df in recon_reports.items():
   df.to_csv (
     os.path.join ( "data/output",
                    k + ".csv" ) )

@@ -1,3 +1,20 @@
+# When counting denom_cells, identify the denom_column
+
+Rather than returning a count,
+return a list of all column positions (ints, 0-indexed)
+where `denom` was found.
+If this list has length 1, use its first element
+as the `denominacion_column` in a `File_Load_Instruction`.
+
+# Use automatically generated `File_Load_Instruction`s to read data.
+
+Merge those instructions with `exceptional_instruction_list`
+from `python.exceptions.discoveries`.
+
+See the bottom (soon to be obsolete) portion of `main.py`,
+particularly its use of `collect.formatted_responses_and_errors`
+as a model of what to do once those instructions are collected.
+
 # Use relative paths wherever possible.
 
 ## Use `paths_from_argument_to_files_with_names_matching_pattern` in `build_genealogies_by_agency`

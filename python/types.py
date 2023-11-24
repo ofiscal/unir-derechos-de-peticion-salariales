@@ -40,7 +40,8 @@ class File_Load_Instruction:
   but there are exceptions. This type can encode those exceptions.
   """
   path                : str     # from root of repo to file
-  sheet               : int = 0 # 0-indexed
+  sheet               : Union[int, str] = 0 # `int` is 0-indexed.
+                                            # `str` is a sheet name.
   denominacion_column : int = 0 # 0-indexed
 
 
