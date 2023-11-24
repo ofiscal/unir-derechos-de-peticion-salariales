@@ -6,21 +6,27 @@ from   pathlib import Path
 import re
 from   typing import Dict, List, Set, Tuple
 #
+from   python.paths import agency_root
 from   python.types import *
 
 
-agency_response_folder = "data/input/agency_responses/"
-agencies = glob ( # all child folders, i.e. all agencies
-    agency_response_folder + "/*/" )
+agencies : List[str] = glob (
+  # Full path to each child of agency_root.
+  agency_root + "/*/" )
+
+# TODO | PITFALL: Why do I have both of the following functions?
+#   paths_from_cwd_to_filenames_matching_pattern
+#   paths_from_argument_to_filenames_matching_pattern
+# They have very different implementations. but they seem to do
+# at least almost and maybe exactly the same thing.
 
 def paths_from_cwd_to_filenames_matching_pattern (
-    pattern : str, # a regex
-    path0 : str = ".",
-    recursionCount = 0
+    pattern : str       , # a regex
+    path0   : str = "." ,
 ) -> List [ str ]:
   """Calling this on (pattern, path0)
 returns a list of paths (relative to the current working directory)
-to files whose names match `pattern`, ignoring case."""
+to files with names matching `pattern`, ignoring case."""
   # Inspired by
   # https://stackoverflow.com/questions/44805898/recursively-look-for-files-and-or-directories
   acc : List [ str ] = [] # accumulates results
@@ -64,7 +70,11 @@ but I'll only use it for agencies and their descendents.
 def genealogy_from_path_from_agencies_root_to_agency_table (
     path : str # path relative to root of agencies input folder
 ) -> Genealogy:
-  """Unlike a similarly-named and soon to be deleted function, this provides a Genealogy in which the `descendent` path is relative to the `agency`."""
+  """Provides a Genealogy in which the `descendent` path
+  is relative to the `agency`.
+  (There is a similarly-named and soon to be deleted function,
+  which IIRC provides an absolute
+  (i.e. from the project root) path.)"""
   return Genealogy (
     descendent = os.path.join ( * Path ( path ) . parts [1:] ),
     agency     =                  Path ( path ) . parts [0]
@@ -96,12 +106,14 @@ def excel_descendents_by_agency (
 def genealogy_from_path_from_project_root_to_agency_table (
     descendent : str
 ) -> Genealogy:
+  """ Given the path from the project root ("absolute path") to an agency table, this returns a `Genealogy`."""
   return Genealogy (
     descendent = descendent,
     agency = os.path.join (
       *(Path ( descendent )
-        . parts [:4] # PITFALL: This is brittle -- it assumes
-                     # all agencies are in `data/input/agency_responses/`.
+        . parts [:4] # PITFALL: Assumes the path to each agency goes
+                     # `data/input/agency_responses/<agency>`
+                     # (which I believe).
         ) ) )
 
 def build_genealogies_by_agency (
@@ -144,7 +156,7 @@ and it is the *only* file in that agency's folder to do so."""
                     # but is deprecated. See
                     # https://stackoverflow.com/a/66666859/916142
           "(cargos|n[oó]mina|planta|1\\.10|110).*\\.xls.*$" ),
-        path0 = agency_response_folder ) ) )
+        path0 = agency_root ) ) )
   planta_candidates = [
     v[0] . descendent for v in genealogies . values() if len(v) == 1 ]
   multiple_planta_file_agencies = [

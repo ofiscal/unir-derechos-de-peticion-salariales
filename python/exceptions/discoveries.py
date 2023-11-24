@@ -47,7 +47,7 @@ exceptional_instruction_list : List [ File_Load_Instruction ] = [
 ]
 
 exceptional_instruction_dict : Dict [ str, File_Load_Instruction ] = {
-  # This spends a little bit of redundant space,
+  # This spends a little bit of space redundantly (on the keys),
   # to make it easy to find the instruction for a given path.
   v . path : v
   for v in exceptional_instruction_list }

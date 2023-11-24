@@ -34,6 +34,7 @@ from   typing import Dict, List, Tuple
 #
 from   python.clean_one_file.defs import denominacion_pattern, libre_pattern
 import python.find_files.defs as find_files
+import python.paths
 from   python.types import *
 
 
@@ -73,7 +74,7 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
                                    ["denom_cells", "libre_cells"] ) )
   for k in list ( eds.keys() ) [-limit:]:
     for v in eds[k]:
-      filename = os.path.join ( find_files.agency_response_folder, k, v )
+      filename = os.path.join ( paths.agency_root, k, v )
       if verbose: print(filename)
       for sn in pd.ExcelFile (filename) . sheet_names:
         new_row = pd.Series (
