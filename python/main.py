@@ -1,3 +1,4 @@
+import os
 from   typing import Dict, List, Set, Tuple
 #
 import python.collect as collect
@@ -9,10 +10,12 @@ from   python.types import *
 
 
 reports = recon.denom_cell_reports (
-  limit = 0, # process everything
+  limit = 0, # 0 = process everything
   verbose = True, )
 for k, df in reports.items():
-  df.to_csv ( k + ".csv" )
+  df.to_csv (
+    os.path.join ( "data/output",
+                   k + ".csv" ) )
 
 
 ##################
