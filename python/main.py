@@ -1,16 +1,17 @@
 import os
+import pandas as pd
 from   typing import Dict, List, Set, Tuple
 #
 import python.collect as collect
 import python.exceptions.discoveries as discoveries
 import python.find_files.defs as find_files
 import python.paths as paths
-import python.reconnaissance as recon
+import python.reconnaissance.defs as recon
 from   python.types import *
 
 
 recon_reports = recon.denom_cell_reports (
-  limit = 0, # 0 = process everything
+  limit = 10, # 0 = process everything
   verbose = True, )
 for k, df in recon_reports.items():
   df.to_csv (

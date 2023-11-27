@@ -43,14 +43,24 @@ unit_of_observation = [ "agency", "file", "sheet" ]
 def count_cells_matching_expr_in_sheet (
     expr : str,
     df   : pd.DataFrame,
-) ->  int:
-  return ( df
-           . astype ( str )
-           . apply ( lambda series:
-                     series . str.match ( expr,
-                                          case = False ) )
-           . astype (int)
-           . sum() . sum() ) # two-dimensional sum
+) -> ( int, # Total number of matches
+       int, # First column that matches
+      ):
+  matches : pd.DataFrame = ( # 1 = match, 0 = non matches
+    df
+    . astype ( str )
+    . apply ( lambda series:
+              series . str.match ( expr,
+                                   case = False ) )
+    . astype ( int ) )
+  counts : pd.Series = ( # Number of matches in each column.
+                         # Index suitable for accessing `df` via `iloc`.
+    matches
+    . sum ( axis = "rows" )
+    . reset_index ( drop=True ) )
+  return (
+    counts . sum(), # total number of matches
+    (counts > 0) . argmax() ) # Where `counts` first achieves 1, its maximum.
 
 def all_denom_and_libre_cell_counts (
     limit   : int  = 0, # How many agencies to scan (default = all).
@@ -80,14 +90,18 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
           { "agency"            : k,
             "file"              : v,
             "sheet"             : sn,
-            "denom_cells" : count_cells_matching_expr_in_sheet (
-              expr = denominacion_pattern,
-              df   = pd.read_excel ( io         = filename,
-                                     sheet_name = sn ) ),
-            "libre_cells" : count_cells_matching_expr_in_sheet (
-              expr = libre_pattern,
-              df   = pd.read_excel ( io         = filename,
-                                     sheet_name = sn ) ),
+            "denom_cells" : (
+              count_cells_matching_expr_in_sheet (
+                expr = denominacion_pattern,
+                df   = pd.read_excel ( io         = filename,
+                                       sheet_name = sn ) )
+              [0] ),
+            "libre_cells" : (
+              count_cells_matching_expr_in_sheet (
+                expr = libre_pattern,
+                df   = pd.read_excel ( io         = filename,
+                                       sheet_name = sn ) )
+              [0] ),
            } )
         acc = pd.concat ( [ acc,
                             pd.DataFrame ( new_row ) . transpose() ],
