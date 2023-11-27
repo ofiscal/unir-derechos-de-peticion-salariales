@@ -64,7 +64,13 @@ def number_of_matches_and_first_column_to_match (
     total_matches,
     ( (counts > 0) . argmax() # Where `counts` first achieves 1, its maximum.
       if total_matches > 0
-      else np.nan # If there are no matches, then this value is never used.
+      else -1 # PITFALL: This is ugly, because the -1st column is not defined.
+      # But if there are no matches, then this value is never used.
+      #
+      # I would like to use a more informative value, like np.nan or None,
+      # but then the series that this becomes a part of gets cast to float
+      # rather than int, which would be even more misleading,
+      # because it's an index identifying a column.
      ) )
 
 def all_denom_and_libre_cell_counts (
