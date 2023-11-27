@@ -1,4 +1,4 @@
-# When counting denom_cells, identify the denom_column
+# When counting `denom_cells`, identify the `denom_column`
 
 Rather than returning a count,
 return a list of all column positions (ints, 0-indexed)
