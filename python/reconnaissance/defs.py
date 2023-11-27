@@ -99,22 +99,21 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
       filename = os.path.join ( agency_root, k, v )
       if verbose: print(filename)
       for sn in pd.ExcelFile (filename) . sheet_names:
+        denom_matches = number_of_matches_and_first_column_to_match (
+          expr = denominacion_pattern,
+          df   = pd.read_excel ( io         = filename,
+                                 sheet_name = sn ) )
+        libre_matches = number_of_matches_and_first_column_to_match (
+          expr = libre_pattern,
+          df   = pd.read_excel ( io         = filename,
+                                 sheet_name = sn ) )
         new_row = pd.Series (
-          { "agency"            : k,
-            "file"              : v,
-            "sheet"             : sn,
-            "denom_cells" : (
-              number_of_matches_and_first_column_to_match (
-                expr = denominacion_pattern,
-                df   = pd.read_excel ( io         = filename,
-                                       sheet_name = sn ) )
-              [0] ),
-            "libre_cells" : (
-              number_of_matches_and_first_column_to_match (
-                expr = libre_pattern,
-                df   = pd.read_excel ( io         = filename,
-                                       sheet_name = sn ) )
-              [0] ),
+          { "agency"       : k,
+            "file"         : v,
+            "sheet"        : sn,
+            "denom_cells"  : denom_matches [0],
+            "denom_column" : denom_matches [1],
+            "libre_cells"  : libre_matches [0],
            } )
         acc = pd.concat ( [ acc,
                             pd.DataFrame ( new_row ) . transpose() ],
