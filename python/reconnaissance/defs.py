@@ -27,6 +27,7 @@
 # included both tables. Hopefully nobody did that.
 
 from   dataclasses import dataclass
+import numpy as np
 import os
 import pandas as pd
 import re
@@ -67,7 +68,8 @@ def number_of_matches_and_first_column_to_match (
      ) )
 
 def all_denom_and_libre_cell_counts (
-    limit   : int  = 0, # How many agencies to scan (default = all).
+    limit   : Union [None, int] = None, # How many agencies to scan.
+                                        # 0 and None have the same effect.
     verbose : bool = False, # For debugging.
     # TODO: Exceptions would be friendlier than debugging the verbose output.
     # Ideally, use both, as printing filenames is helpful
@@ -85,7 +87,8 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
   acc = pd.DataFrame ( [],
                        columns = ( unit_of_observation +
                                    ["denom_cells", "libre_cells"] ) )
-  for k in list ( eds.keys() ) [-limit:]:
+  if not limit: limit = 0 # Convert None to 0
+  for k in list ( eds.keys() ) [-limit:]: # limit=0 means process them all
     for v in eds[k]:
       filename = os.path.join ( agency_root, k, v )
       if verbose: print(filename)
@@ -116,7 +119,8 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
   return acc
 
 def denom_cell_reports (
-    limit : int = 0, # How many agencies to scan (default = all).
+    limit   : Union [None, int] = None, # How many agencies to scan
+                                        # 0 and None have the same effect.
     verbose : bool = False,
 ) -> Dict [ str, pd.DataFrame ]:
   df = all_denom_and_libre_cell_counts ( limit   = limit,
