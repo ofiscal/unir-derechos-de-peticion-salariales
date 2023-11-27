@@ -40,7 +40,7 @@ from   python.types import *
 
 unit_of_observation = [ "agency", "file", "sheet" ]
 
-def count_cells_matching_expr_in_sheet (
+def number_of_matches_and_first_column_to_match (
     expr : str,
     df   : pd.DataFrame,
 ) -> ( int, # Total number of matches
@@ -91,13 +91,13 @@ columns = unit_of_observation + ["denom_cells", "libre_cells"].
             "file"              : v,
             "sheet"             : sn,
             "denom_cells" : (
-              count_cells_matching_expr_in_sheet (
+              number_of_matches_and_first_column_to_match (
                 expr = denominacion_pattern,
                 df   = pd.read_excel ( io         = filename,
                                        sheet_name = sn ) )
               [0] ),
             "libre_cells" : (
-              count_cells_matching_expr_in_sheet (
+              number_of_matches_and_first_column_to_match (
                 expr = libre_pattern,
                 df   = pd.read_excel ( io         = filename,
                                        sheet_name = sn ) )

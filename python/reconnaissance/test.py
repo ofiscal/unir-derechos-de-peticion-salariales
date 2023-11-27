@@ -3,9 +3,9 @@ import pandas as pd
 import python.reconnaissance.defs as defs
 
 
-def test_count_cells_matching_expr_in_sheet ():
+def test_number_of_matches_and_first_column_to_match ():
   assert (
-    defs.count_cells_matching_expr_in_sheet (
+    defs.number_of_matches_and_first_column_to_match (
       expr = ".*a.*",
       df = pd.DataFrame ( {"left noise"  : ["x","ba"],
                            "right noise" : ["ab","x"],
@@ -15,7 +15,7 @@ def test_count_cells_matching_expr_in_sheet ():
     == ( 5,    # 5 matches total
          0 ) ) # the first column has the first match
   assert (
-    defs.count_cells_matching_expr_in_sheet (
+    defs.number_of_matches_and_first_column_to_match (
       expr = ".*a.*",
       df = pd.DataFrame ( {"no match"    : ["y","x"],
                            "caps"        : ["AB","X"],
