@@ -58,9 +58,13 @@ def number_of_matches_and_first_column_to_match (
     matches
     . sum ( axis = "rows" )
     . reset_index ( drop=True ) )
+  total_matches = counts . sum()
   return (
-    counts . sum(), # total number of matches
-    (counts > 0) . argmax() ) # Where `counts` first achieves 1, its maximum.
+    total_matches,
+    ( (counts > 0) . argmax() # Where `counts` first achieves 1, its maximum.
+      if total_matches > 0
+      else np.nan # If there are no matches, then this value is never used.
+     ) )
 
 def all_denom_and_libre_cell_counts (
     limit   : int  = 0, # How many agencies to scan (default = all).
