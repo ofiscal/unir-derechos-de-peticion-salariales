@@ -44,9 +44,9 @@ unit_of_observation = [ "agency", "file", "sheet" ]
 def number_of_matches_and_first_column_to_match (
     expr : str,
     df   : pd.DataFrame,
-) -> ( int, # Total number of matches
-       int, # First column that matches
-      ):
+) -> Tuple [ int, # Total number of matches
+             int, # First column that matches
+            ]:
   matches : pd.DataFrame = ( # 1 = match, 0 = non matches
     df
     . astype ( str )
