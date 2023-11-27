@@ -46,12 +46,9 @@ def count_cells_matching_expr_in_sheet (
 ) ->  int:
   return ( df
            . astype ( str )
-           . applymap (
-             lambda s:
-             bool ( # coerce the `match` object into a `bool`
-               re.match ( expr,
-                          s,
-                          flags = re.IGNORECASE ) ) )
+           . apply ( lambda series:
+                     series . str.match ( expr,
+                                          case = False ) )
            . astype (int)
            . sum() . sum() ) # two-dimensional sum
 

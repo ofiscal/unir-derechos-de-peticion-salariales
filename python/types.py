@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses       import dataclass
+from typing            import Union
 from typing_extensions import TypeAlias
 
 
