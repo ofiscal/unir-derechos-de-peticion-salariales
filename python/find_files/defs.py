@@ -1,3 +1,7 @@
+# TODO ? This entire module might be obsolete.
+# For why, see the comment above
+#   `planta_candidates_and_ambiguous_agencies`
+
 from   dataclasses import dataclass
 from   glob import glob
 import os
@@ -132,6 +136,8 @@ def build_genealogies_by_agency (
         + [g] )
   return acc
 
+# TODO : This is now obsolete, thanks to `python.reconnaissance`.
+# It and everything it alone depends on should probably be removed.
 def planta_candidates_and_ambiguous_agencies () -> Tuple [
     List [ str ],
     List [ str ],
