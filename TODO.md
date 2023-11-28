@@ -1,29 +1,10 @@
-# When counting `denom_cells`, identify the `denom_column`
+# Determine whether the `grado` columns are homogeneous
 
-Rather than returning a count,
-return a list of all column positions (ints, 0-indexed)
-where `denom` was found.
-If this list has length 1, use its first element
-as the `denominacion_column` in a `File_Load_Instruction`.
+They can come in two forms: `xxxx-xx` or `xx` (where `x` is a digit).
 
-# Use automatically generated `File_Load_Instruction`s to read data.
+# Determine which problems to solve by hand (changing the data) and which automatically.
 
-Merge those instructions with `exceptional_instruction_list`
-from `python.exceptions.discoveries`.
-
-See the bottom (soon to be obsolete) portion of `main.py`,
-particularly its use of `collect.formatted_responses_and_errors`
-as a model of what to do once those instructions are collected.
-
-# Use relative paths wherever possible.
-
-## Use `paths_from_argument_to_files_with_names_matching_pattern` in `build_genealogies_by_agency`
-
-or in a new, similarly-named function.
-
-# Find every match of `denominacion de cargos`, on every page of every spreadsheet
-
-Later can filter out instances of, say, "1.10".
+See `python/explore/successes/discovered.py`.
 
 # skip everything in `agencias_with_no_problem_we_can_solve`
 

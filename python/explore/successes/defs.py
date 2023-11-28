@@ -102,5 +102,3 @@ def find_spreadsheets_with_multiple_matches (
          . reset_index ()
          . rename ( columns = {"one" : "columns"} ) )
   return agg [ agg [ "columns" ] > 1 ]
-
-find_spreadsheets_with_multiple_matches ( "grado.*" )
