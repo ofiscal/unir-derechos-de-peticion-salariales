@@ -80,7 +80,9 @@ def fill_header_frame (
     . transpose ()
     . astype ( str )
     . apply ( ( lambda row: # concatenate each column's rows
-                ":".join ( list ( row ) ) ),
+                ":"
+                . join ( list ( row ) )
+                . replace ( "\n", " " ) ),
               axis = "rows" ) )
 
 def mk_header_and_drop_header_rows (
