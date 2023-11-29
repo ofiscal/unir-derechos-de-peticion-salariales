@@ -98,7 +98,7 @@ def find_matches ( expr : str ) -> pd.Series:
            ["column"]
           . unique () )
 
-def find_spreadsheets_with_multiple_matches (
+def count_matches_in_spreadsheets_with_multiple_matches (
     expr : str
 ) -> pd.DataFrame: # Columns ["file"    : str,
                    #          "columns" : int].
@@ -116,7 +116,7 @@ def find_spreadsheets_with_multiple_matches (
 
 def find_multiple_matches_in_spreadsheets_with_multiples (
     df : pd.DataFrame, # columns = [["file", "columns"]]
-                       # output of `find_spreadsheets_with_multiple_matches`
+                       # output of `count_matches_in_spreadsheets_with_multiple_matches`
     expr : str,
 ) -> pd.DataFrame:
   names_by_file_limited = ( names_by_file
