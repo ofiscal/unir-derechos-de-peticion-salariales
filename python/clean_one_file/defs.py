@@ -67,6 +67,21 @@ def strip_empty_rows ( df : pd.DataFrame
                   lambda row: row.all(),
                   axis = 1 ) ) ] # to operate on rows, not columns
 
+def fill_header_frame (
+    df : pd.DataFrame # A (multi-row) "header frame".
+) -> pd.Index: # A true header, as wide as the input data frame.
+  """If the top-left cell is nonempty, this ensures that every cell will be nonempty."""
+  return pd.Index (
+    df
+    . fillna ( method = "ffill" ) # fill down
+    . transpose ()
+    . fillna ( method = "ffill" ) # fill rightward
+    . transpose ()
+    . astype ( str )
+    . apply ( ( lambda row: # concatenate each column's rows
+                ":".join ( list ( row ) ) ),
+              axis = "rows" ) )
+
 def mk_header_and_drop_header_rows (
     df : pd.DataFrame
 )     -> pd.DataFrame:

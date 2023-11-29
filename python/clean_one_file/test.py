@@ -6,6 +6,21 @@ import re
 from   python.clean_one_file.defs import *
 
 
+def test_fill_header_frame ():
+  assert (
+
+    fill_header_frame (
+      pd.DataFrame ( { 0 : ["x", nan, nan],
+                       1 : [nan, nan, "c"],
+                       2 : [nan, nan, nan],
+                       3 : [nan, "a", nan] } ) )
+
+    . equals (
+      pd.Index ( [ "x:x:x",
+                   "x:x:c",
+                   "x:x:c",
+                   "x:a:a" ] ) ) )
+
 def test_series_matches_regex ():
   assert (
     series_matches_regex (
