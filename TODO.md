@@ -1,12 +1,7 @@
-# Adjust the header algorithm
+# Fill the last row of the header column by appending something
 
-First fill down from row 1.
-Only after that, fill rightward..
-
-Since column 1 should have something in the top-left corner,
-this ensures that every cell gets filled.
-Names will be longer (slightly annoying),
-but with fewer collisions (very helpful).
+This should let me distinguish all columns,
+and in a way that makes it obvious which is last (if that matters).
 
 # Determine whether the `grado` columns are homogeneous
 

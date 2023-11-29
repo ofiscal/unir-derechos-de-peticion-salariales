@@ -3,28 +3,23 @@
 import os
 import pandas as pd
 import pickle
-if False: # Including but disabling this import
-          # squashes a `pytest` complaint that `successes` is not defined.
-          # I don't actually evaluate the import because it's slow,
-          # and I have already evaluated `python.main` in the REPL.
-  from python.main import successes
 
 
-latest = "pickles/Wednesday/11a3e7f3302bb9e294d63dcf43baf07d74ac3db9"
-
-if False:
-  # Load (deserialize) data from `python.main`.
-  # This lets me skip running `main`.
-
-  with open ( os.path.join ( latest,
-                             "successes.pickle", ),
-              "rb") as handle:
-      successes = pickle . load ( handle )
-
-# An exemplar: The first element of successes.
-k0 = list(successes.keys()) [0]
-v0 = successes[k0]
-c0 = list(v0.columns)
+if True: # Choose one
+  if False: # Including but disabling this import
+            # squashes a `pytest` complaint that `successes` is not defined.
+            # I don't actually evaluate the import because it's slow,
+            # and I have already evaluated `python.main` in the REPL.
+    from python.main import successes
+  if True:
+    # Load (deserialize) data from `python.main`.
+    # This lets me skip running `main`.
+    import pickle
+    latest = "pickles/Wednesday/d90c80fd31d9377ce8492efcb019e09ea1d5841f"
+    with open ( os.path.join ( latest,
+                               "successes.pickle", ),
+                "rb") as handle:
+        successes = pickle . load ( handle )
 
 if True: # Create `names_by_file`, a data frame
          # with two columns: "column name" and "file"
@@ -40,12 +35,6 @@ if True: # Create `names_by_file`, a data frame
   del (k, df, names_by_file_list)
   assert ( len ( names_by_file["file"] . unique() ) ==
            len ( list ( successes.keys() ) ) )
-
-# How many files were read successfully
-len ( names_by_file["file"] . unique() )
-
-# How many unique column names
-len ( names_by_file["column"] . unique() )
 
 def summarize_matches_to_expr ( expr : str ): # pure IO (printing)
   # How many unique column names matching some regexes
@@ -78,23 +67,6 @@ def summarize_matches_to_expr ( expr : str ): # pure IO (printing)
   print ( "How the number of matches varies across files: " )
   # print ( agg["matches"] . describe () )
   print ( agg2 )
-
-exprs = [ # columns we want
-  # INTENTIONAL : There is no leading .* in many of these expressions.
-  ".*denom.*cargo.*"                    ,
-  "grado.*"                             ,
-  "no.*cargo.*"                         ,
-  "salario.*comun.*subtotal.*"          ,
-  ".*remuneraciones.*total.*subtotal.*" ,
-  ".*inherentes.*total.*"               , # TODO : still quite imprecise
-  ".*prestac.*social.*"                 ,
-  ".*total.*gasto.*"                    , ]
-
-for expr in exprs: summarize_matches_to_expr ( expr )
-del(expr)
-
-# When multiple columns match in a file,
-# what are those columns?
 
 def find_matches ( expr : str ) -> pd.Series:
   """All unique matches, regardless of source file."""
@@ -133,3 +105,10 @@ def matches_in_spreadsheets_with_multiple_matches (
   return ( names_by_file_limited
            [ names_by_file_limited ["column"]
              . str.match ( expr, case = False ) ] )
+
+def summarize_expr_in_column_names ( expr : str ):
+  print ( expr )
+  print ( summarize_matches_to_expr ( expr ) )
+  print ( count_matches_in_spreadsheets_with_multiple_matches ( expr ) )
+  print ( matches_in_spreadsheets_with_multiple_matches ( expr )
+          ["column"] . unique () )
