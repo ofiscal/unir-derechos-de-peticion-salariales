@@ -117,9 +117,9 @@ def test_mk_header_and_drop_header_rows ():
 def test_false_rows_to_column_using_regex ():
   assert (
     false_rows_to_column_using_regex (
-      source_column_name = "source",
-      patterns           = ["a","b"],
-      new_column_name    = "sink",
+      source_column_regex = "source",
+      patterns            = ["a","b"],
+      new_column_name     = "sink",
       df = pd.DataFrame ( {
         "source" : ["1","2","a","4","b","6","7"],
         "more"   : [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
@@ -134,9 +134,9 @@ def test_false_rows_to_column_using_regex ():
 
   try:
     false_rows_to_column_using_regex (
-      source_column_name = "source",
-      patterns           = ["a","b"],
-      new_column_name    = "sink",
+      source_column_regex = "source",
+      patterns            = ["a","b"],
+      new_column_name     = "sink",
       df = pd.DataFrame ( {
         "badly named source" : ["1","2","a","4","b","6","7"],
         "more"   :             [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],
@@ -149,9 +149,9 @@ def test_false_rows_to_column_using_regex ():
   try:
     patterns           = ["a","b"]
     false_rows_to_column_using_regex (
-      source_column_name = "source",
-      patterns           = patterns,
-      new_column_name    = "sink",
+      source_column_regex = "source",
+      patterns            = patterns,
+      new_column_name     = "sink",
       df = pd.DataFrame ( {
         "source" : ["-","-","-","-","-","-","-"],
         "more"   : [ 1 , 2 , 3 , 4 , 5 , 6 , 7 ],

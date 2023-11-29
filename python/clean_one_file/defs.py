@@ -101,11 +101,13 @@ def mk_header_and_drop_header_rows (
 # that takes a lambda to be run on each row
 # that identifies whether it is a false row.
 def false_rows_to_column_using_regex (
-    source_column_name : str, # The column to match against.
-    patterns           : List [ str ], # Patterns to match.
-    new_column_name    : str, # Created from the matches.
-    df                 : pd.DataFrame,
-) ->                     pd.DataFrame:
+    source_column_regex : str,          # The column to match against.
+      # (More accurately, a regex that should uniquely match one column,
+      # against which to match.)
+    patterns            : List [ str ], # Patterns to match.
+    new_column_name     : str,          # Created from the matches.
+    df                  : pd.DataFrame,
+) ->                      pd.DataFrame:
   """Creates a new column with the matches to a regex.
   Fills those matches forward into all unmatched cells.
   Drops the rows that matched the regex.
@@ -115,9 +117,16 @@ def false_rows_to_column_using_regex (
   until the next regex-matching row.
   """
 
-  if not source_column_name in df.columns:
+  source_column_matches =  (
+    pd.Series ( df.columns )
+    . str.match ( source_column_regex,
+                  case = False ) )
+  if not source_column_matches . any ():
     raise ValueError (
-      Column_Absent ( pattern = source_column_name ) )
+      Column_Absent ( pattern = source_column_regex ) )
+  source_column_name = \
+    pd.Series ( df . columns ) [source_column_matches ] . iloc [0]
+
   patterns_str : str = "|".join ( patterns )
     # Moving the disjunction logic from Python into the regex
     # is probably efficient, because
@@ -215,14 +224,14 @@ def format_tutela_response (
 ) -> pd.DataFrame:
   return (
     false_rows_to_column_based_on_missing_values (
-      source_column_name         = "denominación de cargos:1",
-      missing_values_column_name = "grado:2",
-      new_column_name            = "empleado kind 2",
+      source_column_regex         = denominacion_pattern,
+      missing_values_column_regex = grado_pattern,
+      new_column_name             = "empleado kind 2",
       df = false_rows_to_column_using_regex (
-        source_column_name = "denominación de cargos:1",
-        patterns           = [ "empleado.* p.blico",
-                               "trabajador.* oficial.*", ],
-        new_column_name    = "empleado kind 1",
+        source_column_regex = denominacion_pattern,
+        patterns            = [ "empleado.* p.blico",
+                                "trabajador.* oficial.*", ],
+        new_column_name     = "empleado kind 1",
         df = mk_header_and_drop_header_rows (
           strip_empty_rows (
             strip_trailing_rows (
