@@ -1,3 +1,13 @@
+# Adjust the header algorithm
+
+First fill down from row 1.
+Only after that, fill rightward..
+
+Since column 1 should have something in the top-left corner,
+this ensures that every cell gets filled.
+Names will be longer (slightly annoying),
+but with fewer collisions (very helpful).
+
 # Determine whether the `grado` columns are homogeneous
 
 They can come in two forms: `xxxx-xx` or `xx` (where `x` is a digit).
