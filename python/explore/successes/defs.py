@@ -73,14 +73,15 @@ def summarize_matches_to_expr ( expr : str ): # pure IO (printing)
   print ( agg2 )
 
 exprs = [ # columns we want
-  ".*denom.*cargo.*"   ,
-  "grado.*"            , # INTENTIONAL : no leading .*
-  ".*no.*cargo.*"      ,
-  ".*salario.*"        ,
-  ".*remuneraciones.*" ,
-  ".*inherentes.*"     ,
-  ".*prestac.*social.*",
-  ".*total.*gasto.*"   , ]
+  # INTENTIONAL : There is no leading .* in many of these expressions.
+  ".*denom.*cargo.*"                    ,
+  "grado.*"                             ,
+  "no.*cargo.*"                         ,
+  "salario.*comun.*subtotal.*"          ,
+  ".*remuneraciones.*total.*subtotal.*" ,
+  ".*inherentes.*total.*"               , # TODO : still quite imprecise
+  ".*prestac.*social.*"                 ,
+  ".*total.*gasto.*"                    , ]
 
 for expr in exprs: summarize_matches_to_expr ( expr )
 del(expr)
@@ -88,9 +89,19 @@ del(expr)
 # When multiple columns match in a file,
 # what are those columns?
 
+def find_matches ( expr : str ) -> pd.Series:
+  """All unique matches, regardless of source file."""
+  return ( names_by_file
+           [ names_by_file["column"]
+             . str.match ( expr,
+                           case = False ) ]
+           ["column"]
+          . unique () )
+
 def find_spreadsheets_with_multiple_matches (
     expr : str
-) -> pd.DataFrame:
+) -> pd.DataFrame: # Columns ["file"    : str,
+                   #          "columns" : int].
   df = ( names_by_file . copy ()
          [ names_by_file["column"]
            . str.match ( expr,
@@ -102,3 +113,16 @@ def find_spreadsheets_with_multiple_matches (
          . reset_index ()
          . rename ( columns = {"one" : "columns"} ) )
   return agg [ agg [ "columns" ] > 1 ]
+
+def find_multiple_matches_in_spreadsheets_with_multiples (
+    df : pd.DataFrame, # columns = [["file", "columns"]]
+                       # output of `find_spreadsheets_with_multiple_matches`
+    expr : str,
+) -> pd.DataFrame:
+  names_by_file_limited = ( names_by_file
+                            . merge ( df[["file"]],
+                                      on = "file",
+                                      how = "inner" ) )
+  return ( names_by_file_limited
+           [ names_by_file_limited ["column"]
+             . str.match ( expr ) ] )
