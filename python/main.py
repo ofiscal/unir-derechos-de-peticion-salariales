@@ -43,9 +43,12 @@ instructions_for_nice_agencies = list (
      + discoveries.exceptional_instruction_list
    ) )
 
-for (name, obj) in [ ( "successes", successes ),
-                     ( "errors",    errors ) ]:
-  with open( name + "pickle", "wb") as handle:
+for (name, obj) in [
+    ( "successes", successes ),
+    ( "errors",    errors ),
+    ( "recon_reports", recon_reports),
+]:
+  with open( name + ".pickle", "wb") as handle:
     pickle.dump ( obj,
                   handle,
                   protocol = pickle.HIGHEST_PROTOCOL )
