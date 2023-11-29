@@ -1,5 +1,6 @@
 # Interactively inspect `python.main.successes`
 
+import os
 import pandas as pd
 import pickle
 if False: # Including but disabling this import
@@ -9,10 +10,16 @@ if False: # Including but disabling this import
   from python.main import successes
 
 
-# Load (deserialize) data from `python.main`.
-# This lets me skip running `main`.
-with open ( "successes.pickle", "rb") as handle:
-    successes = pickle . load ( handle )
+latest = "pickles/Wednesday/11a3e7f3302bb9e294d63dcf43baf07d74ac3db9"
+
+if False:
+  # Load (deserialize) data from `python.main`.
+  # This lets me skip running `main`.
+
+  with open ( os.path.join ( latest,
+                             "successes.pickle", ),
+              "rb") as handle:
+      successes = pickle . load ( handle )
 
 # An exemplar: The first element of successes.
 k0 = list(successes.keys()) [0]
