@@ -9,8 +9,9 @@ from   python.types import *
 
 denominacion_pattern = ".*denominaci.n.*cargo.*"
   # "Denominación de Cargos", or something close.
+grado_pattern        = "grado.*:2"
 libre_pattern        = ".*libre.*nombramiento.*"
-total_pattern = "total.*"
+total_pattern        = "total.*"
   # Totals like "total empleados" are redundant and unneeded.
 
 def series_matches_regex (
@@ -149,12 +150,14 @@ def false_rows_to_column_using_regex (
 # that takes a lambda to be run on each row
 # that identifies whether it is a false row.
 def false_rows_to_column_based_on_missing_values (
-    source_column_name         : str, # the new column takes values from here
-    missing_values_column_name : str, # missing values here identify rows
-                                      # to generate the new column from
-    new_column_name            : str,
-    df                         : pd.DataFrame,
-) ->                             pd.DataFrame:
+    source_column_regex         : str, # The new column takes values
+      # from the column (there should be only one) matching this regex.
+    missing_values_column_regex : str, # Missing values in the first column
+      # (there should be only one) matching this regex
+      # identify rows to generate the new column from.
+    new_column_name             : str,
+    df                          : pd.DataFrame,
+) ->                              pd.DataFrame:
   """Creates a new column such that,
   wherever the missing values column is missing,
   the new column is equal to the source column,
@@ -163,18 +166,32 @@ def false_rows_to_column_based_on_missing_values (
   Last, it deletes the source rows.
   """
 
-  if not source_column_name in df.columns:
+  source_column_matches =  (
+    pd.Series ( df.columns )
+    . str.match ( source_column_regex,
+                  case = False ) )
+  missing_values_column_matches = (
+    pd.Series ( df.columns )
+    . str.match ( missing_values_column_regex,
+                  case = False ) )
+
+  if not source_column_matches . any ():
     raise ValueError (
-      Column_Absent ( pattern = source_column_name ) )
-  if not missing_values_column_name in df.columns:
+      Column_Absent ( pattern = source_column_regex ) )
+  if not missing_values_column_matches . any ():
     raise ValueError (
-      Column_Absent ( pattern = missing_values_column_name ) )
+      Column_Absent ( pattern = missing_values_column_regex ) )
+
+  source_column_name         = \
+    pd.Series ( df . columns ) [source_column_matches        ] . iloc [0]
+  missing_values_column_name = \
+    pd.Series ( df . columns ) [missing_values_column_matches] . iloc [0]
 
   df [ new_column_name ] = np.where (
     df [ missing_values_column_name ] . isnull(),
     df [ source_column_name ] . str.lower(),
     np.nan )
-  if not df [ new_column_name ] . any():
+  if not df [ new_column_name ] . any ():
     raise ValueError ( Nothing_Missing() )
 
   temp_column_name = new_column_name + "-temp"

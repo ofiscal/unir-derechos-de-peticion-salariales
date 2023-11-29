@@ -166,9 +166,9 @@ def test_false_rows_to_column_based_on_missing_values ():
   assert (
 
     false_rows_to_column_based_on_missing_values (
-      source_column_name         = "source",
-      missing_values_column_name = "missing",
-      new_column_name            = "sink",
+      source_column_regex         = "source",
+      missing_values_column_regex = "missing",
+      new_column_name             = "sink",
       df = pd.DataFrame ( {
         "source"  : ["1","2","3"  ,"4","5","6"  ,"7"],
         "missing" : ["1","2",nan  ,"4","5", nan  ,"7"],
@@ -184,9 +184,9 @@ def test_false_rows_to_column_based_on_missing_values ():
 
   try:
     false_rows_to_column_based_on_missing_values (
-      source_column_name         = "source",
-      missing_values_column_name = "missing",
-      new_column_name            = "sink",
+      source_column_regex         = "source",
+      missing_values_column_regex = "missing",
+      new_column_name             = "sink",
       df = pd.DataFrame ( { # irrelevant data, aside from column names
         "badly named source"  : [ 1 , 2 , 3   , 4 , 5 , 6   , 7 ],
         "missing"             : [ 1 , 2 , nan , 4 , 5 , nan , 7 ],
@@ -198,9 +198,9 @@ def test_false_rows_to_column_based_on_missing_values ():
 
   try:
     false_rows_to_column_based_on_missing_values (
-      source_column_name         = "source",
-      missing_values_column_name = "missing",
-      new_column_name            = "sink",
+      source_column_regex         = "source",
+      missing_values_column_regex = "missing",
+      new_column_name             = "sink",
       df = pd.DataFrame ( { # irrelevant data, aside from column names
         "source"  :             ["1","2","3"  ,"4","5","6"  ,"7"],
         "badly named missing" : [ 1 , 2 , nan , 4 , 5 , nan , 7 ],
@@ -212,9 +212,9 @@ def test_false_rows_to_column_based_on_missing_values ():
 
   try:
     false_rows_to_column_based_on_missing_values (
-      source_column_name         = "source",
-      missing_values_column_name = "missing",
-      new_column_name            = "sink",
+      source_column_regex         = "source",
+      missing_values_column_regex = "missing",
+      new_column_name             = "sink",
       df = pd.DataFrame ( {
         "source"  : ["1","2","3","4","5","6","7"],
         "missing" : ["1","2","3","4","5","6","7"],
