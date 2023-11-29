@@ -95,24 +95,24 @@ def test_mk_header_and_drop_header_rows ():
         [ # The first nan here becomes "".
           # All the others in the first three rows are filled with
           # the previous non-nan value.
-          nan   , ""    , 3     , nan   , 5        ],
-        [ 1     , 2     , 3     , 4     , 5        ],
-        [ 1     , nan   , 3     , nan   , nan      ],
+          nan   , nan , "3"   , nan     , nan      ],
+        [ "1"   , nan , "3"   , "4"     , nan      ],
+        [ "1"   , "2" , nan   , nan     , "5"      ],
         [ # this row has no effect on the resulting names
-          nan   , nan   , nan   , nan   , nan      ],
-        [ # Tricky: even the nan after the 4 becomes ""
+          nan   , nan , "3"   , nan     , nan      ],
+        [ # Tricky: Even the nan after the 4 becomes ""
           # in this row, unlike the others.
-          nan   , nan   , nan   , 4     , nan      ],
+          nan   , nan , nan   , "4"     , nan      ],
         [ "none", "of", "this", "should", "change" ], ] ) )
     . equals (
       pd.DataFrame (
         [ [ "none", "of", "this", "should", "change" ] ],
         index = [5],
-        columns = [ "1:1",
-                    "2:1",
-                    "3:3:3",
-                    "3:4:3:4",
-                    "5:5:3" ] ) ) )
+        columns = ['nan:1:1:1:1',
+                   'nan:1:2:2:2',
+                   '3:3:3:3:3',
+                   '3:4:4:4:4',
+                   '3:4:5:5:5'] ) ) )
 
 def test_false_rows_to_column_using_regex ():
   assert (

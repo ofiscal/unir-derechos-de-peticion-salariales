@@ -70,7 +70,7 @@ def strip_empty_rows ( df : pd.DataFrame
 def fill_header_frame (
     df : pd.DataFrame # A (multi-row) "header frame".
 ) -> pd.Index: # A true header, as wide as the input data frame.
-  """If the top-left cell is nonempty, this ensures that every cell will be nonempty."""
+  """First, missing values are filled down from the top, then they are filled rightward, and finally the rows in each column are concatenated to give a name for that column. If the top-left cell is nonempty, this ensures that every cell will be nonempty."""
   return pd.Index (
     df
     . fillna ( method = "ffill" ) # fill down
@@ -85,57 +85,14 @@ def fill_header_frame (
 def mk_header_and_drop_header_rows (
     df : pd.DataFrame
 )     -> pd.DataFrame:
-  """
-  PURPOSE:
-  Some rows are what I'm calling "header rows".
-  That means they include information that should be in the header
-  (that is, it should be the column names), not in ordinary rows.
-  In the output, the header (column names) are good,
-  and the "header rows" it was created from are deleted.
-
-  TODO | PITFALL:
-  This algorithm is flawed.
-  Looking at the output, it's obvious that headers are mangled.
-  If I recall correctly (a nontrivial assumption)
-  it's because filling downward is not always appropriate;
-  sometimes you should fill rightward.
-  """
+  """Creates a formal column name header
+  from the rows that were serving that function
+  in the original .xlsx documents,
+  and drops those rows."""
   n_header_rows = 5
-
-  if True: # Modify the header rows.
-
-    for i in range(n_header_rows-1):
-      # In each header row but the last,
-      # fill non-missing values forward.
-      # PITFALL: Since the last row is just a series of integers,
-      # filling it forward like the rest would destroy information.
-      # Therefore the range above terminates one unit early.
-      df.iloc[i] = (
-        df.iloc[i] . fillna ( method = "ffill" ) )
-
-    for i in range(n_header_rows):
-      # Fill remaining missing values with "".
-      # These will be ignored in column names.
-      df.iloc[i] = (
-        df.iloc[i] . fillna ( "" ) )
-
-  df.columns = pd.Index ( # Concatentate those header columns.
-    df[0:n_header_rows]
-    . apply (
-      ( lambda column:
-        ":".join ( [ i for i
-                     in column . astype(str)
-                     if i # drops the empty strings
-                    ] )
-        . lower () # increases the probability of matching column names
-                   # across data from different agencies
-        . replace ( " \n", " " )
-       ),
-      axis = 0 ) ) # to apply to columns, not rows
-
-  return df.iloc[
-    # Drop the rows that defined the header.
-    n_header_rows:]
+  df.columns = fill_header_frame (
+    df.iloc [:n_header_rows] )
+  return df[n_header_rows:]
 
 # TODO ? PITFALL: This duplicates some code in
 # `false_rows_to_column_based_on_missing_values`.
