@@ -114,7 +114,7 @@ def count_matches_in_spreadsheets_with_multiple_matches (
          . rename ( columns = {"one" : "columns"} ) )
   return agg [ agg [ "columns" ] > 1 ]
 
-def find_multiple_matches_in_spreadsheets_with_multiples (
+def matches_in_spreadsheets_with_multiple_matches (
     df : pd.DataFrame, # columns = [["file", "columns"]]
                        # output of `count_matches_in_spreadsheets_with_multiple_matches`
     expr : str,

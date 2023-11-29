@@ -8,7 +8,7 @@ count_matches_in_spreadsheets_with_multiple_matches ( "grado.*" )
 
 expr = "no.*cargo.*"
 count_matches_in_spreadsheets_with_multiple_matches (expr)
-find_multiple_matches_in_spreadsheets_with_multiples (
+matches_in_spreadsheets_with_multiple_matches (
   count_matches_in_spreadsheets_with_multiple_matches (expr),
   expr )
 
@@ -17,6 +17,6 @@ expr = ".*inherentes.*total.*"
 find_matches ( expr )
 summarize_matches_to_expr ( expr )
 count_matches_in_spreadsheets_with_multiple_matches (expr)
-find_multiple_matches_in_spreadsheets_with_multiples (
+matches_in_spreadsheets_with_multiple_matches (
   count_matches_in_spreadsheets_with_multiple_matches (expr),
   expr )
