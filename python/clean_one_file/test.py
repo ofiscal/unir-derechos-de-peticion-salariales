@@ -88,9 +88,9 @@ def test_strip_empty_rows ():
   assert ( strip_empty_rows ( df )
            . equals ( df[1:] ) )
 
-def test_assemble_header ():
+def test_mk_header_and_drop_header_rows ():
   assert (
-    assemble_header (
+    mk_header_and_drop_header_rows (
       pd.DataFrame ( [
         [ # The first nan here becomes "".
           # All the others in the first three rows are filled with
