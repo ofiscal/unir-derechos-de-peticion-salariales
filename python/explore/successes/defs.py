@@ -122,14 +122,14 @@ def count_matches_in_spreadsheets_with_multiple_matches (
   return agg [ agg [ "columns" ] > 1 ]
 
 def matches_in_spreadsheets_with_multiple_matches (
-    df : pd.DataFrame, # columns = [["file", "columns"]]
-                       # output of `count_matches_in_spreadsheets_with_multiple_matches`
     expr : str,
 ) -> pd.DataFrame:
-  names_by_file_limited = ( names_by_file
-                            . merge ( df[["file"]],
-                                      on = "file",
-                                      how = "inner" ) )
+  match_counts = \
+    count_matches_in_spreadsheets_with_multiple_matches ( expr )
+  names_by_file_limited = \
+    names_by_file . merge ( match_counts [["file"]],
+                            on = "file",
+                            how = "inner" )
   return ( names_by_file_limited
            [ names_by_file_limited ["column"]
-             . str.match ( expr ) ] )
+             . str.match ( expr, case = False ) ] )
