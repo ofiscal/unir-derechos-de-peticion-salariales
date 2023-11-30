@@ -6,6 +6,7 @@ import re
 from   python.clean_one_file.defs import *
 
 def test_increment_int_after_last_dash ():
+  assert increment_int_after_last_dash ("") == "-0"
   assert increment_int_after_last_dash ("a") == "a-0"
   assert increment_int_after_last_dash ("a-0") == "a-1"
   assert increment_int_after_last_dash ("a-9") == "a-10"

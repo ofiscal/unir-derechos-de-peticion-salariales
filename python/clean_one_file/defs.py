@@ -75,7 +75,8 @@ def increment_int_after_last_dash ( cell : str
   """
   s = pd.Series ( list ( cell ) ) # a series of characters
   is_dash : pd.Series = s [ s . str.match ("-") ] # a series of bools
-  if len(is_dash) < 1: # There are no dashes in `cell`, so append -0.
+  if len(is_dash) < 1: # There are no dashes in `cell`.
+                       # Maybe it is empty. Regardless, append -0.
     return cell + "-0"
   elif cell[-1] == "-": # `cell` ends in a dash, so append 0.
     return cell + "0"
