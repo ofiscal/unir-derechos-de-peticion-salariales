@@ -5,6 +5,15 @@ import re
 #
 from   python.clean_one_file.defs import *
 
+def test_increment_int_after_last_dash ():
+  assert increment_int_after_last_dash ("a") == "a-0"
+  assert increment_int_after_last_dash ("a-0") == "a-1"
+  assert increment_int_after_last_dash ("a-9") == "a-10"
+  assert increment_int_after_last_dash ("a-9") == "a-10"
+  assert increment_int_after_last_dash ("a-9-1") == "a-9-2"
+  # Degenerate cases
+  assert increment_int_after_last_dash ("a-") == "a-0"
+  assert increment_int_after_last_dash ("a-b") == "a-b-0"
 
 def test_fill_header_frame ():
   assert (

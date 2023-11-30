@@ -68,6 +68,29 @@ def strip_empty_rows ( df : pd.DataFrame
                   lambda row: row.all(),
                   axis = 1 ) ) ] # to operate on rows, not columns
 
+def increment_int_after_last_dash ( cell : str
+                                   ) -> str:
+  """Given a string ending in "-x" where x is an integer, this returns the same string but ending in an integer one greater. If the string ends in a dash, it appends 0. If it contains no dash, it appends "-0". If it contains a dash but the portion after the dash is not an integer, it appends -0.
+  The test suite gives an example of each case.
+  """
+  s = pd.Series ( list ( cell ) ) # a series of characters
+  is_dash : pd.Series = s [ s . str.match ("-") ] # a series of bools
+  if len(is_dash) < 1: # There are no dashes in `cell`, so append -0.
+    return cell + "-0"
+  elif cell[-1] == "-": # `cell` ends in a dash, so append 0.
+    return cell + "0"
+  else:
+    index_of_last_dash = ( is_dash
+                           . index [-1] )
+    tail = ( ( s [ index_of_last_dash + 1 :] )
+             . str.cat () )
+    try: tail_as_int = int(tail)
+    except: # `tail` cannot be converted to an int, so append `-0`
+      return cell + "-0"
+    return ( # increment `tail` in `cell`
+      cell [ : index_of_last_dash + 1 ] +
+      str ( tail_as_int + 1 ) )
+
 def fill_header_frame (
     df : pd.DataFrame # A (multi-row) "header frame".
 ) -> pd.Index: # A true header, as wide as the input data frame.
