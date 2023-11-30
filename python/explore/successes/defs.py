@@ -112,3 +112,14 @@ def summarize_expr_in_column_names ( expr : str ):
   print ( count_matches_in_spreadsheets_with_multiple_matches ( expr ) )
   print ( matches_in_spreadsheets_with_multiple_matches ( expr )
           ["column"] . unique () )
+
+def files_with_no_column_matching_expr ( expr : str ):
+  df = names_by_file . copy ()
+  df["does match"] = ( df["column"]
+                       . str.match ( expr,
+                                     case = False )
+                       . astype ( int ) ) # convert from bool
+  agg = ( df . groupby ("file")
+          . sum ()
+          . rename ( columns = {"does match" : "matches"} ) )
+  return agg [ agg["matches"] < 1 ]
