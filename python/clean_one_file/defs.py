@@ -14,6 +14,9 @@ libre_pattern        = ".*libre.*nombramiento.*"
 total_pattern        = "total.*"
   # Totals like "total empleados" are redundant and unneeded.
 
+n_header_rows = 5 # Hopefully homogeneous across all sheets of interest.
+
+
 def series_matches_regex (
     pattern : str,
     series  : pd.Series
@@ -92,10 +95,32 @@ def increment_int_after_last_dash ( cell : str
       cell [ : index_of_last_dash + 1 ] +
       str ( tail_as_int + 1 ) )
 
+def fill_last_header_row ( s0 : pd.Series ) -> pd.Series:
+  """
+  PITFALL: If `s0` includes missing values,
+  its ints might be cast to floats.
+
+  todo ? Slow. Could be optimized."""
+  s = ( s0 . copy()
+        . fillna("")
+        . astype ( str )
+        . reset_index ( drop = True ) )
+  for i in range( len(s) ):
+    s[i] = ( s[i] if s[i]        # s[i] is nonempty
+             else ( "-0" if i==0 # there's no earlier element
+                    else (       # there is an earlier element
+                        increment_int_after_last_dash
+                        ( s[i-1] ) ) ) )
+  s.index = s0.index
+  return s
+
 def fill_header_frame (
     df : pd.DataFrame # A (multi-row) "header frame".
 ) -> pd.Index: # A true header, as wide as the input data frame.
   """First, missing values are filled down from the top, then they are filled rightward, and finally the rows in each column are concatenated to give a name for that column. If the top-left cell is nonempty, this ensures that every cell will be nonempty."""
+  df = df.copy()
+  df.iloc[n_header_rows - 1] = fill_last_header_row (
+    df.iloc[n_header_rows - 1] )
   return pd.Index (
     df
     . fillna ( method = "ffill" ) # fill down
@@ -116,7 +141,6 @@ def mk_header_and_drop_header_rows (
   from the rows that were serving that function
   in the original .xlsx documents,
   and drops those rows."""
-  n_header_rows = 5
   df.columns = fill_header_frame (
     df.iloc [:n_header_rows] )
   return df[n_header_rows:]

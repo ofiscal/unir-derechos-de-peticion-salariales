@@ -5,6 +5,14 @@ import re
 #
 from   python.clean_one_file.defs import *
 
+
+def test_fill_last_header_row ():
+  assert (
+    fill_last_header_row (
+      pd.Series ( ["","",0,"",1,""] ) )
+    . equals (
+      pd.Series ( ["-0","-1","0","0-0","1","1-0" ] ) ) )
+
 def test_increment_int_after_last_dash ():
   assert increment_int_after_last_dash ("") == "-0"
   assert increment_int_after_last_dash ("a") == "a-0"
