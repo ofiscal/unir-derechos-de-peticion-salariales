@@ -31,13 +31,14 @@ def test_fill_header_frame ():
       pd.DataFrame ( { 0 : ["x", nan, nan],
                        1 : [nan, nan, "c"],
                        2 : [nan, nan, nan],
-                       3 : [nan, "a", nan] } ) )
+                       3 : [nan, "a", nan] } ),
+      n_header_rows = 3 )
 
     . equals (
-      pd.Index ( [ "x:x:x",
+      pd.Index ( [ "x:x:-0",
                    "x:x:c",
-                   "x:x:c",
-                   "x:a:a" ] ) ) )
+                   "x:x:c-0",
+                   "x:a:c-1" ] ) ) )
 
 def test_series_matches_regex ():
   assert (
@@ -108,6 +109,7 @@ def test_strip_empty_rows ():
 
 def test_mk_header_and_drop_header_rows ():
   assert (
+
     mk_header_and_drop_header_rows (
       pd.DataFrame ( [
         [ # The first nan here becomes "".
@@ -121,16 +123,18 @@ def test_mk_header_and_drop_header_rows ():
         [ # Tricky: Even the nan after the 4 becomes ""
           # in this row, unlike the others.
           nan   , nan , nan   , "4"     , nan      ],
+        # The above rows describe the header. The rest should be unchanged.
         [ "none", "of", "this", "should", "change" ], ] ) )
+
     . equals (
       pd.DataFrame (
         [ [ "none", "of", "this", "should", "change" ] ],
         index = [5],
-        columns = ['nan:1:1:1:1',
-                   'nan:1:2:2:2',
-                   '3:3:3:3:3',
-                   '3:4:4:4:4',
-                   '3:4:5:5:5'] ) ) )
+        columns = ['nan:1:1:1:-0',
+                   'nan:1:2:2:-1',
+                     '3:3:3:3:-2',
+                     '3:4:4:4:4',
+                     '3:4:5:5:4-0'] ) ) )
 
 def test_false_rows_to_column_using_regex ():
   assert (

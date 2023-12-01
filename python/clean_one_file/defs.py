@@ -116,6 +116,7 @@ def fill_last_header_row ( s0 : pd.Series ) -> pd.Series:
 
 def fill_header_frame (
     df0 : pd.DataFrame,                  # A (multi-row) "header frame".
+    n_header_rows : int = n_header_rows, # Use default unless testing.
 ) -> pd.Index: # A true header, as wide as the input data frame.
   """First, missing values are filled down from the top, then they are filled rightward, and finally the rows in each column are concatenated to give a name for that column. If the top-left cell is nonempty, this ensures that every cell will be nonempty."""
   df = df0.copy()
