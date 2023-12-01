@@ -10,23 +10,29 @@ v0 = successes[k0]
 c0 = list(v0.columns)
 
 for expr in [
-   "denom.*cargo.*:1",                    # Perfect.
-   "grado.*",                             # Perfect.
-   "no.*cargo.*",                         # 3 misfits
-   "salario.*comun.*subtotal.*",          # Perfect.
-   ".*remuneraciones.*remun.*subtotal.*", # Perfect
-   ".*inherentes.*total.*",               # 1 misfit
-   "prestac.*social.*relac.*total.*",     # 1 misfit
-   ".*total.*:.*gastos.*:.*personal.*",
-   ( ".*" + # TODO -- A lot of spreadsheets seem to have
-     # multiple, identical column names that match.
-     # Filling forward the last row of the header column
-     # should help.
-     ".*:.*".join( [ "total.*gastos.*personal"
-                     for _ in range(4) ] )
-     + ".*" ),
-  ]:
+    ( ".*"                                               +
+      ".*".join ( [ "denom.*cargo" for _ in range(4) ] ) +
+      ".*" )                              , # Perfect.
+    "grado[^-]*"                          , # 1 multiple match.
+                                            # Taking the last match solves it.
+    "no.*cargo.*:3$"                      , # Perfect.
+    "salario.*comun.*subtotal.*"          , # Perfect.
+    ".*remuneraciones.*remun.*subtotal.*" , # Perfect
+    ".*inherentes.*total.*10"             , # Perfect
+    "prestac.*social.*relac.*total.*"     , # 1 multiple and 2 not found
+    ".*total.*:.*gastos.*:.*personal.*"   , # Many multi-matches. Taking the first match might work, but first see what happens if I drop the first empty column and everything after it that follows a match to "total.*gasto.*personal.*"
+]:
   print ()
   summarize_expr_in_column_names (expr)
 
-files_with_no_column_matching_expr ( expr )
+
+###############
+# Futz around #
+###############
+
+expr = ".*total.*:.*gastos.*:.*personal.*"
+summarize_expr_in_column_names (expr)
+
+matches_in_spreadsheets_with_multiple_matches ( expr )
+matches_in_spreadsheets_with_multiple_matches ( expr )["column"] . unique()
+matches_in_spreadsheets_with_multiple_matches ( expr )["file"] . unique()

@@ -11,32 +11,32 @@ import  python.reconnaissance.defs     as recon
 from    python.types                   import *
 
 
-if True: # recon: Determine which sheets look friendly.
-         # THIS IS SLOW.
-  recon_reports = recon.denom_cell_reports (
-    limit = None, # a limit of None (or 0) means "process everything"
-    verbose = True, )
+if True: # Define `recon_reports` which states which sheets look friendly.
+         # Choose a strategy.
+  if True: # Rebuild it. PITFALL: THIS IS SLOW.
+           # Also save some products it implies.
+    recon_reports = recon.denom_cell_reports (
+      limit = None, # a limit of None (or 0) means "process everything"
+      verbose = True, )
 
-  if False: # Maybe instead of that,
-            # simply unpickle (deserialize) saved data.
+    for k, df in recon_reports.items():
+      df.to_csv (
+        os.path.join ( "data/output",
+                       k + ".csv" ) )
 
+    ( recon_reports
+      ["nice_sheets_of_agencies_with_multiple_nice_sheets"]
+      [[ "agency",
+         "file",
+         "sheet", ]]
+      . to_excel ( "which-sheet-to-use-for-each-agency.xlsx",
+                   index = False ) )
+
+  if False: # Unpickle (deserialize) a saved image of it.
     with open ( os.path.join ( paths.latest_pickle_path,
                                "recon_reports.pickle", ),
                 "rb") as handle:
         recon_reports = pickle . load ( handle )
-
-  for k, df in recon_reports.items():
-    df.to_csv (
-      os.path.join ( "data/output",
-                     k + ".csv" ) )
-
-( recon_reports
-  ["nice_sheets_of_agencies_with_multiple_nice_sheets"]
-  [[ "agency",
-     "file",
-     "sheet", ]]
-  . to_excel ( "which-sheet-to-use-for-each-agency.xlsx",
-               index = False ) )
 
 instructions_for_nice_agencies = list (
   recon_reports["nice_sheets_of_agencies_with_one_nice_sheet"]
@@ -67,9 +67,9 @@ for (name, obj) in [
     ( "errors"        , errors ),
     ( "recon_reports" , recon_reports),
 ]:
-  with open( os.path.join ( paths.latest_pickle_path,
-                            name + ".pickle", ),
-             "wb") as handle:
+  with open ( name + ".pickle",
+              "wb") as handle:
+    # PITFALL: Might want to move these into `pickle/x` for some value of `x`.
     pickle.dump ( obj,
                   handle,
                   protocol = pickle.HIGHEST_PROTOCOL )

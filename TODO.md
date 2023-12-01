@@ -1,8 +1,3 @@
-# Fill the last row of the header column by appending something
-
-This should let me distinguish all columns,
-and in a way that makes it obvious which is last (if that matters).
-
 # Determine whether the `grado` columns are homogeneous
 
 They can come in two forms: `xxxx-xx` or `xx` (where `x` is a digit).

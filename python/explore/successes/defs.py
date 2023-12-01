@@ -7,7 +7,9 @@ import pickle
 import python.paths as paths
 
 
-if True: # Choose one
+if True: # Choose one of these strategies to define `successes`
+  if False: # Make this "True" if I already ran `main.py`
+    pass
   if False: # Including but disabling this import
             # squashes a `pytest` complaint that `successes` is not defined.
             # I don't actually evaluate the import because it's slow,
@@ -106,13 +108,6 @@ def matches_in_spreadsheets_with_multiple_matches (
            [ names_by_file_limited ["column"]
              . str.match ( expr, case = False ) ] )
 
-def summarize_expr_in_column_names ( expr : str ):
-  print ( expr )
-  print ( summarize_matches_to_expr ( expr ) )
-  print ( count_matches_in_spreadsheets_with_multiple_matches ( expr ) )
-  print ( matches_in_spreadsheets_with_multiple_matches ( expr )
-          ["column"] . unique () )
-
 def files_with_no_column_matching_expr ( expr : str ):
   df = names_by_file . copy ()
   df["does match"] = ( df["column"]
@@ -123,3 +118,10 @@ def files_with_no_column_matching_expr ( expr : str ):
           . sum ()
           . rename ( columns = {"does match" : "matches"} ) )
   return agg [ agg["matches"] < 1 ]
+
+def summarize_expr_in_column_names ( expr : str ):
+  print ( expr )
+  print ( summarize_matches_to_expr ( expr ) )
+  print ( count_matches_in_spreadsheets_with_multiple_matches ( expr ) )
+  print ( matches_in_spreadsheets_with_multiple_matches ( expr )
+          ["column"] . unique () )
