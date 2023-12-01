@@ -3,14 +3,14 @@
 import os
 import pandas as pd
 import pickle
+#
+import python.paths as paths
 
-
-latest = "pickles/Wednesday/3b4243eeb8ce4144ecb910b7ec4d3ac036da0d03"
 
 if False: # Load (deserialize) data from `python.main`.
           # This lets me skip running `main`.
 
-  with open ( os.path.join ( latest,
+  with open ( os.path.join ( paths.latest_pickle_path,
                              "recon_reports.pickle", ),
               "rb") as handle:
     recon_reports = pickle . load ( handle )

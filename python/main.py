@@ -20,7 +20,8 @@ if True: # recon: Determine which sheets look friendly.
   if False: # Maybe instead of that,
             # simply unpickle (deserialize) saved data.
 
-    with open ( "pickles/Wednesday/9df594e7e714518c0763d3e5459f454cec3f408c/recon_reports.pickle",
+    with open ( os.path.join ( paths.latest_pickle_path,
+                               "recon_reports.pickle", ),
                 "rb") as handle:
         recon_reports = pickle . load ( handle )
 
@@ -28,6 +29,14 @@ if True: # recon: Determine which sheets look friendly.
     df.to_csv (
       os.path.join ( "data/output",
                      k + ".csv" ) )
+
+( recon_reports
+  ["nice_sheets_of_agencies_with_multiple_nice_sheets"]
+  [[ "agency",
+     "file",
+     "sheet", ]]
+  . to_excel ( "which-sheet-to-use-for-each-agency.xlsx",
+               index = False ) )
 
 instructions_for_nice_agencies = list (
   recon_reports["nice_sheets_of_agencies_with_one_nice_sheet"]
@@ -58,7 +67,9 @@ for (name, obj) in [
     ( "errors"        , errors ),
     ( "recon_reports" , recon_reports),
 ]:
-  with open( name + ".pickle", "wb") as handle:
+  with open( os.path.join ( paths.latest_pickle_path,
+                            name + ".pickle", ),
+             "wb") as handle:
     pickle.dump ( obj,
                   handle,
                   protocol = pickle.HIGHEST_PROTOCOL )

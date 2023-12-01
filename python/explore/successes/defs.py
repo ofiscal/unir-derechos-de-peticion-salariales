@@ -3,6 +3,8 @@
 import os
 import pandas as pd
 import pickle
+#
+import python.paths as paths
 
 
 if True: # Choose one
@@ -14,9 +16,7 @@ if True: # Choose one
   if True:
     # Load (deserialize) data from `python.main`.
     # This lets me skip running `main`.
-    import pickle
-    latest = "pickles/Wednesday/d90c80fd31d9377ce8492efcb019e09ea1d5841f"
-    with open ( os.path.join ( latest,
+    with open ( os.path.join ( paths.latest_pickle_path,
                                "successes.pickle", ),
                 "rb") as handle:
         successes = pickle . load ( handle )
