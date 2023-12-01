@@ -269,27 +269,39 @@ def false_rows_to_column_based_on_missing_values (
       . isnull() ]
     . drop ( columns = [ temp_column_name ] ) )
 
+def drop_columns_after_first_with_name_matching_total_gasto_personal (
+    df : pd.DataFrame,
+) -> pd.DataFrame:
+  index_of_first_column_to_match = (
+    pd.Series ( df.columns )
+    . str.match ( "total.*gasto.*personal",
+                  case = False )
+    . argmax () ) # Works because True > False.
+  return df.iloc [ : ,
+                   : 1 + index_of_first_column_to_match ]
+
 def format_tutela_response (
     agency_root : str, # the `path` of `source_file` is relative to this
     source_file : File_Load_Instruction
 ) -> pd.DataFrame:
   return (
-    false_rows_to_column_based_on_missing_values (
-      source_column_regex         = denominacion_pattern,
-      missing_values_column_regex = grado_pattern,
-      new_column_name             = "empleado kind 2",
-      df = false_rows_to_column_using_regex (
-        source_column_regex = denominacion_pattern,
-        patterns            = [ "empleado.* p.blico",
-                                "trabajador.* oficial.*", ],
-        new_column_name     = "empleado kind 1",
-        df = mk_header_and_drop_header_rows (
-          strip_empty_rows (
-            strip_trailing_rows (
-              strip_leading_rows (
-                pd.read_excel (
-                  io         = os.path.join ( agency_root,
-                                              source_file . path ),
-                  sheet_name =                source_file . sheet ),
-                denominacion_column = source_file . denominacion_column
-              ) ) ) ) ) ) )
+    drop_columns_after_first_with_name_matching_total_gasto_personal (
+      false_rows_to_column_based_on_missing_values (
+        source_column_regex         = denominacion_pattern,
+        missing_values_column_regex = grado_pattern,
+        new_column_name             = "empleado kind 2",
+        df = false_rows_to_column_using_regex (
+          source_column_regex = denominacion_pattern,
+          patterns            = [ "empleado.* p.blico",
+                                  "trabajador.* oficial.*", ],
+          new_column_name     = "empleado kind 1",
+          df = mk_header_and_drop_header_rows (
+            strip_empty_rows (
+              strip_trailing_rows (
+                strip_leading_rows (
+                  pd.read_excel (
+                    io         = os.path.join ( agency_root,
+                                                source_file . path ),
+                    sheet_name =                source_file . sheet ),
+                  denominacion_column = source_file . denominacion_column
+                ) ) ) ) ) ) ) )
