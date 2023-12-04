@@ -1,3 +1,12 @@
+# HOW TO USE THIS:
+# The comment "CONFIGURE THIS" identifies a line you might want to change.
+#
+# PURPOSE:
+# Defines three objects:
+#   recon_reports : Which agencies have how many well-behaved sheets.
+#   successes     : Data sets successfully read.
+#   errors        : Data sets that could not be read, and why.
+
 import os
 import pandas as pd
 import pickle
@@ -11,10 +20,14 @@ import  python.reconnaissance.defs     as recon
 from    python.types                   import *
 
 
+# CONFIGURE THIS
+recon_strategy = Definition_Strategy.Load_from_pickle
+
 if True: # Define `recon_reports` which states which sheets look friendly.
          # Choose a strategy.
-  if True: # Rebuild it. PITFALL: THIS IS SLOW.
-           # Also save some products it implies.
+  if recon_strategy == Definition_Strategy.Create: # PITFALL: Slow.
+    # Rebuild it.
+    # Also save some products it implies.
     recon_reports = recon.denom_cell_reports (
       limit = None, # a limit of None (or 0) means "process everything"
       verbose = True, )
@@ -32,7 +45,8 @@ if True: # Define `recon_reports` which states which sheets look friendly.
       . to_excel ( "which-sheet-to-use-for-each-agency.xlsx",
                    index = False ) )
 
-  if False: # Unpickle (deserialize) a saved image of it.
+  if recon_strategy == Definition_Strategy.Load_from_pickle:
+    # Unpickle (deserialize) a saved image of it.
     with open ( os.path.join ( paths.latest_pickle_path,
                                "recon_reports.pickle", ),
                 "rb") as handle:

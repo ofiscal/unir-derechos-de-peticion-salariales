@@ -1,30 +1,28 @@
-# Interactively inspect `python.main.successes`
-
 import os
 import pandas as pd
 import pickle
 #
 import python.paths as paths
+from   python.types import *
 
 
-if True: # Choose one of these strategies to define `successes`
-  if False: # Make this "True" if I already ran `main.py`
-    pass
-  if False: # Including but disabling this import
-            # squashes a `pytest` complaint that `successes` is not defined.
-            # I don't actually evaluate the import because it's slow,
-            # and I have already evaluated `python.main` in the REPL.
-    from python.main import successes
-  if True:
-    # Load (deserialize) data from `python.main`.
-    # This lets me skip running `main`.
-    with open ( os.path.join ( paths.latest_pickle_path,
-                               "successes.pickle", ),
-                "rb") as handle:
-        successes = pickle . load ( handle )
+column_name_regexes = [
+  ( ".*"                                               +
+    ".*".join ( [ "denom.*cargo" for _ in range(4) ] ) +
+    ".*" )                              , # Perfect.
+  "grado[^-]*"                          , # 1 multiple match. Taking the last match solves it.
+  "no.*cargo.*:3$"                      , # Perfect.
+  "salario.*comun.*subtotal.*"          , # Perfect.
+  ".*remuneraciones.*remun.*subtotal.*" , # Perfect
+  ".*inherentes.*total.*10"             , # Perfect
+  "prestac.*social.*relac.*total.*"     , # 1 multiple and 2 not found
+  ".*total.*:.*gastos.*:.*personal.*"   , # Many multi-matches. Taking the first match might work, but first see what happens if I drop the first empty column and everything after it that follows a match to "total.*gasto.*personal.*"
+]
 
-if True: # Create `names_by_file`, a data frame
-         # with two columns: "column name" and "file"
+def mk_names_by_file ( successes : pd.DataFrame
+                      ) ->         pd.DataFrame:
+  """Create `names_by_file`, a data frame
+  with two columns: ["column [name]", "file"]."""
   names_by_file_list = []
   for k in successes.keys():
     df = pd.DataFrame ( { "column" : successes[k] . columns } )
@@ -34,11 +32,14 @@ if True: # Create `names_by_file`, a data frame
     pd.concat ( # default `axis` : preserve width and grow length
       names_by_file_list )
     . reset_index ( drop=True ) )
-  del (k, df, names_by_file_list)
   assert ( len ( names_by_file["file"] . unique() ) ==
            len ( list ( successes.keys() ) ) )
+  return names_by_file
 
-def summarize_matches_to_expr ( expr : str ): # pure IO (printing)
+def summarize_matches_to_expr (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
+): # pure IO (printing)
   # How many unique column names matching some regexes
   df = names_by_file . copy ()
   df["match"] = ( df["column"]
@@ -80,7 +81,8 @@ def find_matches ( expr : str ) -> pd.Series:
           . unique () )
 
 def count_matches_in_spreadsheets_with_multiple_matches (
-    expr : str
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
 ) -> pd.DataFrame: # Columns ["file"    : str,
                    #          "columns" : int].
   df = ( names_by_file . copy ()
@@ -96,10 +98,13 @@ def count_matches_in_spreadsheets_with_multiple_matches (
   return agg [ agg [ "columns" ] > 1 ]
 
 def matches_in_spreadsheets_with_multiple_matches (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr : str,
 ) -> pd.DataFrame:
   match_counts = \
-    count_matches_in_spreadsheets_with_multiple_matches ( expr )
+    count_matches_in_spreadsheets_with_multiple_matches (
+      names_by_file = names_by_file,
+      expr          = expr )
   names_by_file_limited = \
     names_by_file . merge ( match_counts [["file"]],
                             on = "file",
@@ -119,9 +124,18 @@ def files_with_no_column_matching_expr ( expr : str ):
           . rename ( columns = {"does match" : "matches"} ) )
   return agg [ agg["matches"] < 1 ]
 
-def summarize_expr_in_column_names ( expr : str ):
+def summarize_expr_in_column_names (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
+): # pure IO
   print ( expr )
-  print ( summarize_matches_to_expr ( expr ) )
-  print ( count_matches_in_spreadsheets_with_multiple_matches ( expr ) )
-  print ( matches_in_spreadsheets_with_multiple_matches ( expr )
+  print ( summarize_matches_to_expr (
+    names_by_file = names_by_file,
+    expr          = expr ) )
+  print ( count_matches_in_spreadsheets_with_multiple_matches (
+    names_by_file = names_by_file,
+    expr          = expr ) )
+  print ( matches_in_spreadsheets_with_multiple_matches
+          ( names_by_file = names_by_file,
+            expr          = expr )
           ["column"] . unique () )

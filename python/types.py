@@ -1,6 +1,7 @@
 from dataclasses       import dataclass
 from typing            import Union
 from typing_extensions import TypeAlias
+from enum              import Enum, unique, auto
 
 
 Agency     : TypeAlias = str # a child (immediate descendent) of
@@ -25,6 +26,15 @@ but this type is easier to reason about and edit,
 because one ignore the order of the fields. """
   descendent : Descendent
   agency     : Agency
+
+@unique
+class Definition_Strategy (Enum):
+  """Sometimes, a thing is so much work to define that we would like to avoid doing so unless necessary. This is to indicate when to do which.
+
+  TODO: A more elegant but complex solution is to use a Makefile."""
+  Already_defined  = auto ()
+  Create           = auto () # The slow option.
+  Load_from_pickle = auto ()
 
 @dataclass
 class File_Load_Instruction:
