@@ -1,3 +1,25 @@
+# Concatenate all data sets with exactly one match for each column regex
+
+If any resulting column is not numerical, show its unique values.
+Will likely need to reformat some of the "grado" values --
+dropping all but the last two characters.
+
+Show aggregate statistics.
+If any has a strange max or min,
+concatenate `describe`tions of that column on a per-agency basis,
+and `describe` that concatenation.
+
+
+# Enable overriding, for specific column-file pairs, the default regex
+
+to identify that column.
+
+Write a fucntion to merge two `File_Load_Instruction`s.
+The first argument takes precedence.
+Use this function to merge the automatically-generated instructions
+with a manual one, so that the manual one only needs to identify
+the regex in question, not specify everything else about the file.
+
 # Determine whether the `grado` columns are homogeneous
 
 They can come in two forms: `xxxx-xx` or `xx` (where `x` is a digit).
