@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import pickle
+from   typing import *
 #
 import python.paths as paths
 from   python.types import *
@@ -80,11 +81,12 @@ def find_matches ( expr : str ) -> pd.Series:
            ["column"]
           . unique () )
 
-def count_matches_in_spreadsheets_with_multiple_matches (
+def spreadsheets_with_fn_matches (
     names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr          : str,
-) -> pd.DataFrame: # Columns ["file"    : str,
-                   #          "columns" : int].
+    fn            : Callable [[int],bool],
+) -> pd.DataFrame:
+  """ `spreadsheets_with_fn_matches (names_by_file, expr, fn)` returns a series of filenames such that the number of columns in the sheet associated with that filename satisfies `fn`."""
   df = ( names_by_file . copy ()
          [ names_by_file["column"]
            . str.match ( expr,
@@ -95,16 +97,38 @@ def count_matches_in_spreadsheets_with_multiple_matches (
          . sum ()
          . reset_index ()
          . rename ( columns = {"one" : "columns"} ) )
-  return agg [ agg [ "columns" ] > 1 ]
+  return agg [ agg [ "columns" ] . apply ( fn ) ]
+
+
+def count_matches_in_spreadsheets_with_fn_matches (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
+    fn            : Callable [[int],bool],
+) -> pd.DataFrame:
+  """ `count_matches_in_spreadsheets_with_fn_matches (names_by_file, expr, fn)` returns a spreadsheet with columns ["file"    : str,
+                                      "columns" : int],
+  that shows all files for which the number n of matches satisfies `fn`. For instance, if `fn = lambda x: x > 1`, it only returns agencies for which the number of matches is greater than 1."""
+  df = ( names_by_file . copy ()
+         [ names_by_file["column"]
+           . str.match ( expr,
+                         case = False ) ] )
+  df["one"] = 1
+  agg = ( df [["file", "one"]]
+         . groupby ( "file" )
+         . sum ()
+         . reset_index ()
+         . rename ( columns = {"one" : "columns"} ) )
+  return agg [ agg [ "columns" ] . apply ( fn ) ]
 
 def matches_in_spreadsheets_with_multiple_matches (
     names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr : str,
 ) -> pd.DataFrame:
   match_counts = \
-    count_matches_in_spreadsheets_with_multiple_matches (
+    count_matches_in_spreadsheets_with_fn_matches (
       names_by_file = names_by_file,
-      expr          = expr )
+      expr          = expr,
+      fn            = lambda x: x > 1, )
   names_by_file_limited = \
     names_by_file . merge ( match_counts [["file"]],
                             on = "file",
@@ -132,10 +156,15 @@ def summarize_expr_in_column_names (
   print ( summarize_matches_to_expr (
     names_by_file = names_by_file,
     expr          = expr ) )
-  print ( count_matches_in_spreadsheets_with_multiple_matches (
-    names_by_file = names_by_file,
-    expr          = expr ) )
-  print ( matches_in_spreadsheets_with_multiple_matches
-          ( names_by_file = names_by_file,
-            expr          = expr )
-          ["column"] . unique () )
+  print (
+    "Files with more than one match:\n",
+    count_matches_in_spreadsheets_with_fn_matches (
+      names_by_file = names_by_file,
+      expr          = expr,
+      fn            = lambda x: x > 1, ) )
+  print (
+    "Matches_in_spreadsheets_with_multiple_matches:\n",
+    ( matches_in_spreadsheets_with_multiple_matches
+      ( names_by_file = names_by_file,
+        expr          = expr )
+      ["column"] . unique () ) )
