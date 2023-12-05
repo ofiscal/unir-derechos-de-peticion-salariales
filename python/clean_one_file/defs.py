@@ -281,8 +281,8 @@ def drop_columns_after_first_with_name_matching_total_gasto_personal (
                    : 1 + index_of_first_column_to_match ]
 
 def format_tutela_response (
-    agency_root : str, # the `path` of `source_file` is relative to this
-    source_file : File_Load_Instruction
+    agency_root      : str, # `load_instruction.path` is relative to this
+    load_instruction : File_Load_Instruction,
 ) -> pd.DataFrame:
   return (
     drop_columns_after_first_with_name_matching_total_gasto_personal (
@@ -301,7 +301,8 @@ def format_tutela_response (
                 strip_leading_rows (
                   pd.read_excel (
                     io         = os.path.join ( agency_root,
-                                                source_file . path ),
-                    sheet_name =                source_file . sheet ),
-                  denominacion_column = source_file . denominacion_column
+                                                load_instruction . path ),
+                    sheet_name =                load_instruction . sheet ),
+                  denominacion_column = (       load_instruction
+                                                . denominacion_column )
                 ) ) ) ) ) ) ) )

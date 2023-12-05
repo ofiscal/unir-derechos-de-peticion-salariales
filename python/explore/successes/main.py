@@ -18,12 +18,17 @@ if True: # Define `successes`
   elif successes_strategy == Definition_Strategy.Create:
     # PITFALL: SLOW.
     # Run the code that defines `successes`.
-    from python.main import successes
+    from python.main import successes, file_load_instructions
   elif successes_strategy == Definition_Strategy.Load_from_pickle:
     with open ( os.path.join ( paths.latest_pickle_path,
                                "successes.pickle", ),
                 "rb") as handle:
       successes : Dict [ str, pd.DataFrame ] = \
+        pickle . load ( handle )
+    with open ( os.path.join ( paths.latest_pickle_path,
+                               "load_instructions.pickle", ),
+                "rb") as handle:
+      load_instructions : Dict [ str, pd.DataFrame ] = \
         pickle . load ( handle )
 
 names_by_file : pd.DataFrame = \

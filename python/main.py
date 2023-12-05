@@ -62,24 +62,26 @@ instructions_for_nice_agencies = list (
               denominacion_column = row["denom_column"], ),
             axis = "columns" ) )
 
+load_instructions = (
+  # TODO: Here I'm giving precedence to the earlier,
+  # manually generated instructions.
+  # Try the reverse and see if there are more successes that way.
+  [ i for i in instructions_for_nice_agencies
+    if not i.path in (
+        discoveries.exceptional_instruction_dict
+        . keys () ) ]
+  + discoveries.exceptional_instruction_list )
+
 ( successes, errors
  ) = collect.formatted_responses_and_errors (
-   agency_root = paths.agency_root,
-   source_files = (
-     # TODO: Here I'm giving precedence to the earlier,
-     # manually generated instructions.
-     # Try the reverse and see if there are more successes that way.
-     [ i for i in instructions_for_nice_agencies
-       if not i.path in (
-           discoveries.exceptional_instruction_dict
-           . keys () ) ]
-     + discoveries.exceptional_instruction_list
-   ) )
+   agency_root       = paths.agency_root,
+   load_instructions = load_instructions )
 
 for (name, obj) in [
-    ( "successes"     , successes ),
-    ( "errors"        , errors ),
-    ( "recon_reports" , recon_reports),
+    ( "recon_reports"     , recon_reports),
+    ( "load_instructions" , load_instructions ),
+    ( "successes"         , successes ),
+    ( "errors"            , errors ),
 ]:
   with open ( name + ".pickle",
               "wb") as handle:

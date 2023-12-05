@@ -1,8 +1,6 @@
 from   typing import Dict, List, Set, Tuple
 #
-from   python.collect import (
-  formatted_responses_and_errors,
-  format_tutela_response )
+from   python.collect import format_tutela_response
 import python.exceptions.discoveries as discoveries
 from   python.find_files.defs import (
   planta_candidates_and_ambiguous_agencies,
