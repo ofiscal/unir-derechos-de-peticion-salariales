@@ -141,7 +141,7 @@ def subset_columns_by_regex_and_concatenate (
 ) -> pd.DataFrame:
   # TODO : Test, once `spreadsheets_with_one_match_for_each_expr` works.
   dfs : List [ pd.DataFrame ] = [] # accumulator
-  for f,df in successes.items():
+  for f,df in dfs_by_file.items():
     df [ "Excel file" ] = f
     df.columns = exprs # to make them homogeneous
     dfs.append (
