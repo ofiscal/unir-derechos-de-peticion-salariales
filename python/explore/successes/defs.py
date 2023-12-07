@@ -102,6 +102,30 @@ def spreadsheets_with_fn_matches (
          . rename ( columns = {"one" : "columns"} ) )
   return agg [ agg [ "columns" ] . apply ( fn ) ]
 
+def columns_matching_regexes_if_one_to_one_correspondence (
+    df : pd.DataFrame,
+    exprs   : List [ str ], # regexes for column names
+) -> pd.DataFrame: # A subset of the columns of `df`.
+  """Returns the subset of the columns in `df` that match one of the regexes in `exprs`, IFF exactly one column matches each regex. If anything else happens, this raises a `ValueError`."""
+  expr_match_pair_list : \
+    List [ List [ Tuple [ str,
+                          List [str] ] ] ] = \
+    [ ( expr,  # the regex
+        list ( # the matches
+          pd.Series ( df.columns )
+          [ pd.Series ( df.columns )
+            . str.match ( expr ) ] ) )
+      for expr in exprs ]
+  non_unit_matches = [ m for m in expr_match_pair_list
+                       if len ( m[1] ) != 1 ]
+  try:
+    assert not non_unit_matches # it is empty
+  except:
+    raise ValueError (
+      "`columns_matching_regexes_if_one_to_one_correspondence`: wrong number (should be 1) of column name matches to at least one regex.",
+      non_unit_matches )
+  return df [ [ expr
+                for (expr,_) in expr_match_pair_list ] ]
 
 def count_matches_in_spreadsheets_with_fn_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
