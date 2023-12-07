@@ -31,8 +31,8 @@ if True: # Define `successes`
       load_instructions : Dict [ str, pd.DataFrame ] = \
         pickle . load ( handle )
 
-names_by_file : pd.DataFrame = \
-  defs.mk_names_by_file ( successes )
+colnames_by_file : pd.DataFrame = \
+  defs.mk_colnames_by_file ( successes )
 
 
 ###############
@@ -40,10 +40,10 @@ names_by_file : pd.DataFrame = \
 ###############
 
 # How many files were read successfully
-len ( names_by_file["file"] . unique() )
+len ( colnames_by_file["file"] . unique() )
 
 # How many unique column names
-len ( names_by_file["column"] . unique() )
+len ( colnames_by_file["column"] . unique() )
 
 # An exemplar: The first element of successes.
 k0 = list(successes.keys()) [0]
@@ -54,22 +54,22 @@ c0 = list(v0.columns)
 for expr in defs.column_name_regexes:
   print ()
   defs.summarize_expr_in_column_names (
-    names_by_file = names_by_file,
-    expr = expr)
+    colnames_by_file = colnames_by_file,
+    expr             = expr)
 
 expr = ".*total.*:.*gastos.*:.*personal.*"
 defs.summarize_expr_in_column_names (
-  names_by_file = names_by_file,
-  expr          = expr )
+  colnames_by_file   = colnames_by_file,
+  expr               = expr )
 
 ( defs.matches_in_spreadsheets_with_multiple_matches
-  ( names_by_file = names_by_file,
-    expr          = expr ) )
+  ( colnames_by_file = colnames_by_file,
+    expr             = expr ) )
 ( defs.matches_in_spreadsheets_with_multiple_matches
-  ( names_by_file = names_by_file,
-    expr          = expr )
+  ( colnames_by_file = colnames_by_file,
+    expr             = expr )
   ["column"] . unique() )
 ( defs.matches_in_spreadsheets_with_multiple_matches
-  ( names_by_file = names_by_file,
-    expr          = expr )
+  ( colnames_by_file = colnames_by_file,
+    expr             = expr )
   ["file"] . unique() )
