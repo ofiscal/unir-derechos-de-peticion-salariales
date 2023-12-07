@@ -75,14 +75,14 @@ def summarize_matches_to_expr (
 def find_matches (
     names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr          : str,
-) -> pd.Series:
+) -> List [ str ]:
   """All unique matches, regardless of source file."""
-  return ( names_by_file
-           [ names_by_file["column"]
-             . str.match ( expr,
-                           case = False ) ]
-           ["column"]
-          . unique () )
+  return list ( names_by_file
+                [ names_by_file["column"]
+                  . str.match ( expr,
+                                case = False ) ]
+                ["column"]
+                . unique () )
 
 def spreadsheets_with_fn_matches (
     names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
