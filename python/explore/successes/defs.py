@@ -102,6 +102,13 @@ def spreadsheets_with_fn_matches (
          . rename ( columns = {"one" : "columns"} ) )
   return agg [ agg [ "columns" ] . apply ( fn ) ]
 
+def spreadsheets_with_one_match_for_each_expr (
+    colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr             : str,
+) -> pd.DataFrame:
+  # TODO : finish
+  pass
+
 def columns_matching_regexes_if_one_to_one_correspondence (
     df : pd.DataFrame,
     exprs   : List [ str ], # regexes for column names
@@ -126,6 +133,21 @@ def columns_matching_regexes_if_one_to_one_correspondence (
       non_unit_matches )
   return df [ [ expr
                 for (expr,_) in expr_match_pair_list ] ]
+
+def subset_columns_by_regex_and_concatenate (
+    dfs_by_file : Dict [ str, # original Excel filename
+                         pd.DataFrame ],
+    exprs       : List [ str ], # regexes for column names
+) -> pd.DataFrame:
+  # TODO : Test, once `spreadsheets_with_one_match_for_each_expr` works.
+  dfs : List [ pd.DataFrame ] = [] # accumulator
+  for f,df in successes.items():
+    df [ "Excel file" ] = f
+    df.columns = exprs # to make them homogeneous
+    dfs.append (
+      columns_matching_regexes_if_one_to_one_correspondence (
+        df, exprs ) )
+  return pd.concat ( dfs )
 
 def count_matches_in_spreadsheets_with_fn_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]

@@ -73,3 +73,6 @@ defs.summarize_expr_in_column_names (
   ( colnames_by_file = colnames_by_file,
     expr             = expr )
   ["file"] . unique() )
+
+df = defs.subset_columns_by_regex_and_concatenate ( successes,
+                                                    column_name_regexes )
