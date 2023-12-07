@@ -72,7 +72,10 @@ def summarize_matches_to_expr (
   # print ( agg["matches"] . describe () )
   print ( agg2 )
 
-def find_matches ( expr : str ) -> pd.Series:
+def find_matches (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
+) -> pd.Series:
   """All unique matches, regardless of source file."""
   return ( names_by_file
            [ names_by_file["column"]
@@ -122,7 +125,7 @@ def count_matches_in_spreadsheets_with_fn_matches (
 
 def matches_in_spreadsheets_with_multiple_matches (
     names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
-    expr : str,
+    expr          : str,
 ) -> pd.DataFrame:
   match_counts = \
     count_matches_in_spreadsheets_with_fn_matches (
@@ -137,7 +140,10 @@ def matches_in_spreadsheets_with_multiple_matches (
            [ names_by_file_limited ["column"]
              . str.match ( expr, case = False ) ] )
 
-def files_with_no_column_matching_expr ( expr : str ):
+def files_with_no_column_matching_expr (
+    names_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+    expr          : str,
+) -> pd.DataFrame:
   df = names_by_file . copy ()
   df["does match"] = ( df["column"]
                        . str.match ( expr,
