@@ -88,8 +88,11 @@ def spreadsheets_with_fn_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr             : str,
     fn               : Callable [[int],bool],
-) -> pd.DataFrame:
-  """ `spreadsheets_with_fn_matches (colnames_by_file, expr, fn)` returns a series of filenames such that the number of columns in the sheet associated with that filename satisfies `fn`."""
+) -> pd.DataFrame # columns: ["file","columns"] (the plural is important)
+  """ `spreadsheets_with_fn_matches (colnames_by_file, expr, fn)` returns a series of filenames such that the number of columns in the sheet associated with that filename satisfies `fn`.
+
+  PITFALL: The name is a bit misleading, because if no columns in a file match the expr, then that file will not appear in the results -- even if `fn` is `lambda x: x == 0`.
+  """
   df = ( colnames_by_file . copy ()
          [ colnames_by_file["column"]
            . str.match ( expr,
