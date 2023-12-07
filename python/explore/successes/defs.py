@@ -88,7 +88,7 @@ def spreadsheets_with_fn_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
     expr             : str,
     fn               : Callable [[int],bool],
-) -> pd.DataFrame # columns: ["file","columns"] (the plural is important)
+) -> pd.DataFrame: # columns: ["file","n columns"]
   """ `spreadsheets_with_fn_matches (colnames_by_file, expr, fn)` returns a series of filenames such that the number of columns in the sheet associated with that filename satisfies `fn`.
 
   PITFALL: The name is a bit misleading, because if no columns in a file match the expr, then that file will not appear in the results -- even if `fn` is `lambda x: x == 0`.
@@ -102,8 +102,8 @@ def spreadsheets_with_fn_matches (
          . groupby ( "file" )
          . sum ()
          . reset_index ()
-         . rename ( columns = {"one" : "columns"} ) )
-  return agg [ agg [ "columns" ] . apply ( fn ) ]
+         . rename ( columns = {"one" : "n columns"} ) )
+  return agg [ agg [ "n columns" ] . apply ( fn ) ]
 
 def spreadsheets_with_one_match_for_each_expr (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
@@ -157,8 +157,8 @@ def count_matches_in_spreadsheets_with_fn_matches (
     expr             : str,
     fn               : Callable [[int],bool],
 ) -> pd.DataFrame:
-  """ `count_matches_in_spreadsheets_with_fn_matches (colnames_by_file, expr, fn)` returns a spreadsheet with columns ["file"    : str,
-                                      "columns" : int],
+  """ `count_matches_in_spreadsheets_with_fn_matches (colnames_by_file, expr, fn)` returns a spreadsheet with columns ["file"      : str,
+                                         "n columns" : int],
   that shows all files for which the number n of matches satisfies `fn`. For instance, if `fn = lambda x: x > 1`, it only returns agencies for which the number of matches is greater than 1."""
   df = ( colnames_by_file . copy ()
          [ colnames_by_file["column"]
@@ -169,8 +169,8 @@ def count_matches_in_spreadsheets_with_fn_matches (
          . groupby ( "file" )
          . sum ()
          . reset_index ()
-         . rename ( columns = {"one" : "columns"} ) )
-  return agg [ agg [ "columns" ] . apply ( fn ) ]
+         . rename ( columns = {"one" : "n columns"} ) )
+  return agg [ agg [ "n columns" ] . apply ( fn ) ]
 
 def matches_in_spreadsheets_with_multiple_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
