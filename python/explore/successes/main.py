@@ -34,6 +34,10 @@ if True: # Define `successes`
 colnames_by_file : pd.DataFrame = \
   defs.mk_colnames_by_file ( successes )
 
+extra_nice = defs.spreadsheets_with_1_match_to_each_expr (
+  colnames_by_file = colnames_by_file,
+  exprs = defs.column_name_regexes, )
+
 
 ###############
 # Futz around #

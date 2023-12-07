@@ -105,12 +105,24 @@ def spreadsheets_with_fn_matches (
          . rename ( columns = {"one" : "n columns"} ) )
   return agg [ agg [ "n columns" ] . apply ( fn ) ]
 
-def spreadsheets_with_one_match_for_each_expr (
+def spreadsheets_with_1_match_to_each_expr (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
-    expr             : str,
-) -> pd.DataFrame:
-  # TODO : finish
-  pass
+    exprs            : List [str],
+) -> Set [ str ]: # strings from the "file" column of `colnames_by_file`
+  sets_of_matching_files : List [ Set [ str ] ] = [
+    set (
+      spreadsheets_with_fn_matches ( colnames_by_file = colnames_by_file,
+                                     expr = expr,
+                                     fn = lambda x: x == 1 )
+      ["file"] )
+    for expr in exprs ]
+  return set.intersection ( *sets_of_matching_files )
+
+# def spreadsheets_with_one_match_for_each_expr (
+#     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
+#     exprs            : List [ str ]
+# ) -> pd.DataFrame:
+#   spreadsheets_with_fn_matches (
 
 def columns_matching_regexes_if_one_to_one_correspondence (
     df : pd.DataFrame,
