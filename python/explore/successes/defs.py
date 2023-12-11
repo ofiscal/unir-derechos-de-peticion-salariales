@@ -125,8 +125,8 @@ def spreadsheets_with_1_match_to_each_expr (
 #   spreadsheets_with_fn_matches (
 
 def columns_matching_regexes_if_one_to_one_correspondence (
-    df : pd.DataFrame,
-    exprs   : List [ str ], # regexes for column names
+    df    : pd.DataFrame,
+    exprs : List [ str ], # regexes for column names
 ) -> pd.DataFrame: # A subset of the columns of `df`.
   """Returns the subset of the columns in `df` that match one of the regexes in `exprs`, IFF exactly one column matches each regex. If anything else happens, this raises a `ValueError`."""
   expr_match_pair_list : \
@@ -154,14 +154,14 @@ def subset_columns_by_regex_and_concatenate (
                          pd.DataFrame ],
     exprs       : List [ str ], # regexes for column names
 ) -> pd.DataFrame:
-  # TODO : Test, once `spreadsheets_with_one_match_for_each_expr` works.
   dfs : List [ pd.DataFrame ] = [] # accumulator
-  for f,df in dfs_by_file.items():
+  for f,df0 in dfs_by_file.items():
+    df = columns_matching_regexes_if_one_to_one_correspondence (
+      df = df0,
+      exprs = exprs )
+    df.columns = exprs # rename columns for homogeneity across files
     df [ "Excel file" ] = f
-    df.columns = exprs # to make them homogeneous
-    dfs.append (
-      columns_matching_regexes_if_one_to_one_correspondence (
-        df, exprs ) )
+    dfs.append ( df )
   return pd.concat ( dfs )
 
 def count_matches_in_spreadsheets_with_fn_matches (

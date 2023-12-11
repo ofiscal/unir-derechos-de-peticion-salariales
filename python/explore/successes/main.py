@@ -3,7 +3,7 @@
 import os
 import pandas as pd
 import pickle
-from   typing import Dict
+from   typing import Dict, List, Set
 #
 import python.paths as paths
 from   python.types import *
@@ -34,20 +34,26 @@ if True: # Define `successes`
 colnames_by_file : pd.DataFrame = \
   defs.mk_colnames_by_file ( successes )
 
-extra_nice = defs.spreadsheets_with_1_match_to_each_expr (
-  colnames_by_file = colnames_by_file,
-  exprs = defs.column_name_regexes, )
+extra_nice : List[str] = list (
+  defs.spreadsheets_with_1_match_to_each_expr (
+    colnames_by_file = colnames_by_file,
+    exprs = defs.column_name_regexes, ) )
+
+together : pd.DataFrame = defs.subset_columns_by_regex_and_concatenate (
+  dfs_by_file = { k : successes[k]
+                  for k in extra_nice },
+  exprs = defs.column_name_regexes )
 
 
 ###############
 # Futz around #
 ###############
 
-# How many files were read successfully
-len ( colnames_by_file["file"] . unique() )
+print ( "Files successfully read: ",
+        len ( colnames_by_file["file"] . unique() ) )
 
-# How many unique column names
-len ( colnames_by_file["column"] . unique() )
+print ( "Unique column names: ",
+        len ( colnames_by_file["column"] . unique() ) )
 
 # An exemplar: The first element of successes.
 k0 = list(successes.keys()) [0]
