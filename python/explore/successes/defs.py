@@ -130,7 +130,8 @@ def columns_matching_regexes_if_one_to_one_correspondence (
         list ( # the matches
           pd.Series ( df.columns )
           [ pd.Series ( df.columns )
-            . str.match ( expr ) ] ) )
+            . str.match ( expr,
+                          case = False ) ] ) )
       for expr in exprs ]
   non_unit_matches = [ m for m in expr_match_pair_list
                        if len ( m[1] ) != 1 ]

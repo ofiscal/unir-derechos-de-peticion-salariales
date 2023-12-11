@@ -6,3 +6,4 @@ temp*
 *.pyc
 TAGS*
 data/output/
+*.pickle
