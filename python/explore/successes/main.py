@@ -1,5 +1,6 @@
 # Interactively inspect `python.main.successes`
 
+import numpy as np
 import os
 import pandas as pd
 import pickle
@@ -44,6 +45,34 @@ together : pd.DataFrame = defs.subset_columns_by_regex_and_concatenate (
                   for k in extra_nice },
   exprs = defs.column_name_regexes )
 
+together [ ".*denom.*cargo.*denom.*cargo.*denom.*cargo.*denom.*cargo.*" ] # verbal
+together [ "grado[^-]*" ] .  unique() # messy
+together [ "no.*cargo.*:3$" ] . replace ( " ", np.nan ) # float
+
+x = together [ "salario.*comun.*subtotal.*" ] . astype ( str )
+x [ x.apply ( len ) < 1 ]
+
+together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float)
+together [ ".*remuneraciones.*remun.*subtotal.*" ]
+together [ ".*inherentes.*total.*10" ]
+together [ "prestac.*social.*relac.*total.*" ]
+together [ ".*total.*:.*gastos.*:.*personal.*" ]
+
+
+
+
+
+
+
+
+
+
+
+
+for c in together.columns:
+  print()
+  print(c)
+  print( together[c].unique() )
 
 ###############
 # Futz around #

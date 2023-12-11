@@ -141,8 +141,8 @@ def columns_matching_regexes_if_one_to_one_correspondence (
     raise ValueError (
       "`columns_matching_regexes_if_one_to_one_correspondence`: wrong number (should be 1) of column name matches to at least one regex.",
       non_unit_matches )
-  return df [ [ expr
-                for (expr,_) in expr_match_pair_list ] ]
+  return df [ [ match
+                for (_,[match]) in expr_match_pair_list ] ]
 
 def subset_columns_by_regex_and_concatenate (
     dfs_by_file : Dict [ str, # original Excel filename
@@ -157,7 +157,7 @@ def subset_columns_by_regex_and_concatenate (
     df.columns = exprs # rename columns for homogeneity across files
     df [ "Excel file" ] = f
     dfs.append ( df )
-  return pd.concat ( dfs )
+  return pd.concat ( dfs ) . reset_index ( drop = True )
 
 def count_matches_in_spreadsheets_with_fn_matches (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
