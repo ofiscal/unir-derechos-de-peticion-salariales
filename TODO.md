@@ -1,3 +1,23 @@
+# Meeting
+## Skip grado
+
+at least for now.
+
+## Clean agency names and send to William
+
+so he can associate them with agency codes.
+
+## Get sueldo basico anual
+
+## Replace some sub-subtotals with subtotals
+
+Quoting [successes.main](~/of/unir-tutelas/python/explore/successes/main.py):
+
+```
+together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float) # bad -- want the total, not the subtotal
+together [ ".*remuneraciones.*remun.*subtotal.*" ] # bad -- want the total, not the subtotal
+```
+
 # Concatenate all data sets with exactly one match for each column regex
 
 If any resulting column is not numerical, show its unique values.

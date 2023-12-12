@@ -45,6 +45,11 @@ together : pd.DataFrame = defs.subset_columns_by_regex_and_concatenate (
                   for k in extra_nice },
   exprs = defs.column_name_regexes )
 
+together [ "no.*cargo.*:3$" ] = (
+  together [ "no.*cargo.*:3$" ]
+  . replace ( " ", np.nan )
+  . astype ( float ) )
+
 together [ ".*denom.*cargo.*denom.*cargo.*denom.*cargo.*denom.*cargo.*" ] # verbal
 together [ "grado[^-]*" ] .  unique() # messy
 together [ "no.*cargo.*:3$" ] . replace ( " ", np.nan ) # float
@@ -52,31 +57,21 @@ together [ "no.*cargo.*:3$" ] . replace ( " ", np.nan ) # float
 x = together [ "salario.*comun.*subtotal.*" ] . astype ( str )
 x [ x.apply ( len ) < 1 ]
 
-together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float)
-together [ ".*remuneraciones.*remun.*subtotal.*" ]
+together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float) # bad -- want the total, not the subtotal
+together [ ".*remuneraciones.*remun.*subtotal.*" ] # bad -- want the total, not the subtotal
 together [ ".*inherentes.*total.*10" ]
 together [ "prestac.*social.*relac.*total.*" ]
 together [ ".*total.*:.*gastos.*:.*personal.*" ]
 
 
-
-
-
-
-
-
-
-
-
-
-for c in together.columns:
-  print()
-  print(c)
-  print( together[c].unique() )
-
 ###############
 # Futz around #
 ###############
+
+for col_name in together.columns:
+  print()
+  print(col_name)
+  print( together[col_name].unique() )
 
 print ( "Files successfully read: ",
         len ( colnames_by_file["file"] . unique() ) )
