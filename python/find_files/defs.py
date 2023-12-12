@@ -18,6 +18,20 @@ agencies : List[str] = glob (
   # Full path to each child of agency_root.
   agency_root + "/*/" )
 
+def agency_names_cleaned (
+) -> pd.DataFrame: # One column, "agency"
+  """Returns the list of agencies, as implied by the names of the folders under the agency root, after stripping off all initial characters that are not alphabetical."""
+  root_length = len ( agency_root . split("/") )
+  return (
+    pd.DataFrame (
+      { "agency" :
+        [ re.sub (
+            "^[^a-zA-Z]*", # find the longest leading substring with no alphas
+            "",            # and delete it
+            path . split("/") [root_length] ) # in the first segment of path after the agency root
+          for path in agencies ] } )
+    . sort_values ("agency") )
+
 # TODO | PITFALL: Why do I have both of the following functions?
 #   paths_from_cwd_to_filenames_matching_pattern
 #   paths_from_argument_to_filenames_matching_pattern
