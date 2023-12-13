@@ -21,8 +21,10 @@ import  python.reconnaissance.defs     as recon
 from    python.types                   import *
 
 
-# CONFIGURE THIS
-recon_strategy = Definition_Strategy.Load_from_pickle
+# CONFIGURE THESE
+recon_strategy     = Definition_Strategy.Load_from_pickle
+successes_strategy = Definition_Strategy.Load_from_pickle
+
 
 if True: # Define `recon_reports` which states which sheets look friendly.
          # Choose a strategy.
@@ -73,10 +75,23 @@ load_instructions = (
         . keys () ) ]
   + discoveries.exceptional_instruction_list )
 
-( successes, errors
- ) = collect.formatted_responses_and_errors (
-   agency_root       = paths.agency_root,
-   load_instructions = load_instructions )
+if True:
+  if successes_strategy == Definition_Strategy.Create: # PITFALL: Slow.
+    ( successes, errors
+     ) = collect.formatted_responses_and_errors (
+       agency_root       = paths.agency_root,
+       load_instructions = load_instructions )
+
+  if successes_strategy == Definition_Strategy.Load_from_pickle:
+    # Unpickle (deserialize) a saved image of each.
+    with open ( os.path.join ( paths.latest_pickle_path,
+                               "successes.pickle", ),
+                "rb") as handle:
+        successes = pickle . load ( handle )
+    with open ( os.path.join ( paths.latest_pickle_path,
+                               "errors.pickle", ),
+                "rb") as handle:
+        errors = pickle . load ( handle )
 
 together = join.join_successfully_read_excel_files (
   successes = successes )
