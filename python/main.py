@@ -15,6 +15,7 @@ from   typing import Dict, List, Set, Tuple
 import  python.collect                 as collect
 import  python.exceptions.discoveries  as discoveries
 import  python.find_files.defs         as find_files
+import  python.join_files as join
 import  python.paths                   as paths
 import  python.reconnaissance.defs     as recon
 from    python.types                   import *
@@ -77,11 +78,15 @@ load_instructions = (
    agency_root       = paths.agency_root,
    load_instructions = load_instructions )
 
+together = join.join_successfully_read_excel_files (
+  successes = successes )
+
 for (name, obj) in [
     ( "recon_reports"     , recon_reports),
     ( "load_instructions" , load_instructions ),
     ( "successes"         , successes ),
     ( "errors"            , errors ),
+    ( "together"          , together ),
 ]:
   with open ( name + ".pickle",
               "wb") as handle:
