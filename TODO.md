@@ -1,4 +1,3 @@
-# Meeting
 ## Skip grado
 
 at least for now.
@@ -17,18 +16,6 @@ Quoting [successes.main](~/of/unir-tutelas/python/explore/successes/main.py):
 together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float) # bad -- want the total, not the subtotal
 together [ ".*remuneraciones.*remun.*subtotal.*" ] # bad -- want the total, not the subtotal
 ```
-
-# Concatenate all data sets with exactly one match for each column regex
-
-If any resulting column is not numerical, show its unique values.
-Will likely need to reformat some of the "grado" values --
-dropping all but the last two characters.
-
-Show aggregate statistics.
-If any has a strange max or min,
-concatenate `describe`tions of that column on a per-agency basis,
-and `describe` that concatenation.
-
 
 # Enable overriding, for specific column-file pairs, the default regex
 

@@ -39,7 +39,7 @@ def mk_colnames_by_file ( successes : pd.DataFrame
 
 def summarize_matches_to_expr (
     colnames_by_file : pd.DataFrame, # columns: ["column [name]", "file"]
-    expr          : str,
+    expr             : str,
 ): # pure IO (printing)
   # How many unique column names matching some regexes
   df = colnames_by_file . copy ()
