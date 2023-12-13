@@ -1,23 +1,23 @@
-## Skip grado
+# Explore `together : pd.DataFrame`
 
-at least for now.
+## Negative values
 
-## Clean agency names and send to William
+Which agencies give negative values?
+What do those rows look like?
 
-so he can associate them with agency codes.
+## Do the four subtotals sum to the total?
 
-## Get sueldo basico anual
+## The rows where `# cargos == 0`
 
-## Replace some sub-subtotals with subtotals
+What do they look like?
+Where do they come from?
 
-Quoting [successes.main](~/of/unir-tutelas/python/explore/successes/main.py):
+## Empty rows
 
-```
-together [ "salario.*comun.*subtotal.*" ] . replace ( "", np.nan ) . astype (float) # bad -- want the total, not the subtotal
-together [ ".*remuneraciones.*remun.*subtotal.*" ] # bad -- want the total, not the subtotal
-```
+What do they look like?
+Where do they come from?
 
-# Enable overriding, for specific column-file pairs, the default regex
+# Enable overriding, for specific column-file pairs, the default regex.
 
 to identify that column.
 
@@ -27,21 +27,17 @@ Use this function to merge the automatically-generated instructions
 with a manual one, so that the manual one only needs to identify
 the regex in question, not specify everything else about the file.
 
-# Determine whether the `grado` columns are homogeneous
-
-They can come in two forms: `xxxx-xx` or `xx` (where `x` is a digit).
-
 # Determine which problems to solve by hand (changing the data) and which automatically.
 
 See `python/explore/successes/discovered.py`.
 
-# skip everything in `agencias_with_no_problem_we_can_solve`
+# Skip everything in `agencias_with_no_problem_we_can_solve`.
 
-# see if "MINISTERIO DE EDUCACIÓN NACIONAL" looks unreadable because sheets are hidden
+# See if "MINISTERIO DE EDUCACIÓN NACIONAL" looks unreadable because sheets are hidden.
 
 see `python/exceptions/discoveries.py`
 
-# expand paths consumed
+# Expand paths consumed.
 
 There are around 170 agencies that responded.
 Currently the code identifies 139 planta files to interpret --
@@ -54,7 +50,7 @@ But that is unlikely to provide a complete solution.
 Files which are still not found after doing that
 will need to be identified manually.
 
-# handle the errors
+# Handle the errors.
 
 Some work on this has been done;
 see the two files matching the path `python/error_hunting.*`.
@@ -64,18 +60,3 @@ of 118 successesfully interpreted data frames,
 but also a dictionary called `errors` of 21 errors.
 Each error is associated in that dictionary with the file that generated it.
 Those errors need to be chased down.
-
-# verify the successes
-
-It cannot be assumed that the successes correspond perfectly
-to what we want. This will require comparing them, with human eyeballs,
-to the data they come from.
-But some statistical / data science finesse
-could definitely make that work easier.
-
-# unite the successes
-
-We can't assume that they all speak exactly the same language --
-they might vary slightly in column names,
-or in the terms they use to identify employee roles,
-or various other things.
