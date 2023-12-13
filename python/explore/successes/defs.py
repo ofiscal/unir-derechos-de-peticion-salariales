@@ -7,18 +7,20 @@ import python.paths as paths
 from   python.types import *
 
 
-column_name_regexes = [
-  ( ".*"                                               +
-    ".*".join ( [ "denom.*cargo" for _ in range(4) ] ) +
-    ".*" )                              , # Perfect.
-  "grado[^-]*"                          , # 1 multiple match. Taking the last match solves it.
-  "no.*cargo.*:3$"                      , # Perfect.
-  "salario.*comun.*subtotal.*"          , # Perfect.
-  ".*remuneraciones.*remun.*subtotal.*" , # Perfect
-  ".*inherentes.*total.*10"             , # Perfect
-  "prestac.*social.*relac.*total.*"     , # 1 multiple and 2 not found
-  ".*total.*:.*gastos.*:.*personal.*"   , # Many multi-matches. Taking the first match might work, but first see what happens if I drop the first empty column and everything after it that follows a match to "total.*gasto.*personal.*"
-]
+column_name_regexes : Dict [ str, str ] =  {
+  "cargo" : ( ".*"                                +
+              ".*".join ( [ "denom.*cargo"
+                            for _ in range(4) ] ) +
+              ".*" )                                         ,
+  "grado"          : "grado[^-]*"                            ,
+  "# cargos"       : "no.*cargo.*:3$"                        ,
+  "sueldo basico"  : ".*b.sico.*anual.*"                     ,
+  "salario"        : "salario.*total.*total.*total.*"        ,
+  "remuneraciones" : "remuneraciones.*total.*total.*total.*" ,
+  "contribuciones" : ".*inherentes.*total.*10"               ,
+  "prestaciones"   : "prestac.*social.*relac.*total.*"       ,
+  "gasto total"    : ".*total.*:.*gastos.*:.*personal.*"     ,
+}
 
 def mk_colnames_by_file ( successes : pd.DataFrame
                          ) ->         pd.DataFrame:
@@ -147,14 +149,16 @@ def columns_matching_regexes_if_one_to_one_correspondence (
 def subset_columns_by_regex_and_concatenate (
     dfs_by_file : Dict [ str, # original Excel filename
                          pd.DataFrame ],
-    exprs       : List [ str ], # regexes for column names
+    exprs       : Dict [ str, str ], # (name : regex) for each column name
 ) -> pd.DataFrame:
   dfs : List [ pd.DataFrame ] = [] # accumulator
   for f,df0 in dfs_by_file.items():
-    df = columns_matching_regexes_if_one_to_one_correspondence (
-      df = df0,
-      exprs = exprs )
-    df.columns = exprs # rename columns for homogeneity across files
+    df = ( columns_matching_regexes_if_one_to_one_correspondence (
+             df = df0,
+             exprs = list ( exprs . values () ) )
+          . copy () )
+    df.columns = list ( exprs . keys () ) # rename columns for
+                                          # homogeneity across files
     df [ "Excel file" ] = f
     dfs.append ( df )
   return pd.concat ( dfs ) . reset_index ( drop = True )

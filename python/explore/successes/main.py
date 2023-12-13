@@ -9,6 +9,7 @@ from   typing import *
 import python.explore.successes.defs as defs
 import python.paths as paths
 from   python.types import *
+from   python.util import str_to_float
 
 
 successes_strategy = Definition_Strategy.Load_from_pickle
@@ -38,10 +39,16 @@ colnames_by_file : pd.DataFrame = \
 extra_nice : List[str] = list (
   defs.spreadsheets_with_1_match_to_each_expr (
     colnames_by_file = colnames_by_file,
-    exprs = defs.column_name_regexes, ) )
+    exprs = list ( defs.column_name_regexes
+                   . values () )
+  ) )
 
 together : pd.DataFrame = defs.subset_columns_by_regex_and_concatenate (
   dfs_by_file = { k : successes[k]
                   for k in extra_nice },
   exprs = defs.column_name_regexes )
 
+for colname in ( list ( defs.column_name_regexes . keys() )
+                 [2:] ): # The first two aren't floats.
+  together[colname] = str_to_float (
+    together[colname] )
