@@ -1,6 +1,6 @@
 # Start a docker container based on the latest image.
 docker run --name unir -itd          \
-  -v /home/jeff/of/unir-tutelas:/mnt \
+  -v /home/jeff/of/unir-salarios:/mnt \
   ofiscal/tax.co:latest
 
 docker exec -it unir bash
