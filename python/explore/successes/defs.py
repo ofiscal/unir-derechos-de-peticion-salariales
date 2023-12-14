@@ -12,6 +12,8 @@ column_name_regexes : Dict [ str, str ] =  {
               ".*".join ( [ "denom.*cargo"
                             for _ in range(4) ] ) +
               ".*" )                                         ,
+  # "nivel 1"        : "empleado kind 1"                       ,
+  # "nivel 2"        : "empleado kind 2"                       ,
   "grado"          : "grado[^-]*"                            ,
   "# cargos"       : "no.*cargo.*:3$"                        ,
   "sueldo basico"  : ".*b.sico.*anual.*"                     ,

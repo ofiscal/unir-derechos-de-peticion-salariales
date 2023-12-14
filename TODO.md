@@ -1,3 +1,5 @@
+# What happened to the "empleado kind [1,2]" variables?
+
 # Explore `together : pd.DataFrame`
 
 ## Remaining empty rows
