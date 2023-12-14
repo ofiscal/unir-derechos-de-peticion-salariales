@@ -17,8 +17,11 @@ def nullish (
     x,
     tolerance_absolute = 0.4, # less than 1/2, so that it works for ints
 ) -> bool:
+  if x is np.nan:
+    return True
   if str(x) == "nan": # PITFALL: Ugly hack. Used because, despite all logic,
-    # `x is np.nan` gives False if `x` is np.nan in a series of floats.
+    # `x is np.nan` returns False if `x` is missing (that is, np.nan)
+    # when this function is being applied to a series of floats.
     return True
   if type(x) == str:
     return x == ""
