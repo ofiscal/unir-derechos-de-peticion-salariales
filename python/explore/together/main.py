@@ -17,6 +17,20 @@ if True: # Define `together`.
                 "rb") as handle:
       together = pickle . load ( handle )
 
+if True: # determine which agencies have negative COP values
+  together["something negative"] = (
+    ( (together ["sueldo basico" ] < 0) |
+      (together ["salario"]        < 0) |
+      (together ["remuneraciones"] < 0) |
+      (together ["contribuciones"] < 0) |
+      (together ["prestaciones"]   < 0) |
+      (together ["gasto total"]    < 0) )
+    . astype ( int ) )
+
+  ( together
+    [ together ["something negative"] > 0 ]
+    ["agency"] . unique() )
+
 if True: # examine synthetic gasto total
   together = add_synthetic_total (together)
 
