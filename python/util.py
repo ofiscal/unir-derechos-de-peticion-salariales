@@ -13,6 +13,18 @@ def near ( a,
            ( (tolerance_absolute + a > b) &
              (tolerance_absolute + b > a) ) )
 
+def nullish (
+    x,
+    tolerance_absolute = 0.4, # less than 1/2, so that it works for ints
+) -> bool:
+  if str(x) == "nan": # PITFALL: Ugly hack. Used because, despite all logic,
+    # `x is np.nan` gives False if `x` is np.nan in a series of floats.
+    return True
+  if type(x) == str:
+    return x == ""
+  if type(x) in [float,int]:
+    return near ( 0, x, tolerance_absolute = tolerance_absolute )
+
 def str_to_float (s : pd.Series) -> pd.Series:
   return (s . astype ( str )
           . str.replace ( "[, ]",       "",    regex=True )

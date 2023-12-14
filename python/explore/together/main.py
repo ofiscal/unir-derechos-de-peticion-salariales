@@ -1,9 +1,10 @@
 import os
 import pickle
 #
-import python.paths as paths
-from   python.types import *
-from   python.util  import *
+import python.explore.together.defs  as defs
+import python.paths                  as paths
+from   python.types                  import *
+from   python.util                   import *
 
 
 if True: # Define `together`.
@@ -27,14 +28,36 @@ if True: # determine which agencies have negative COP values
       (together ["gasto total"]    < 0) )
     . astype ( int ) )
 
-  ( together
-    [ together ["something negative"] > 0 ]
-    ["agency"] . unique() )
+  print ( "\nAgencies with at least one row with a negative COP value:\n",
+          ( together
+            [ together ["something negative"] > 0 ]
+            ["agency"] . unique() ) )
 
-if True: # examine synthetic gasto total
-  together = add_synthetic_total (together)
+if True: # Identify most of the "nullish" rows.
+  df = (
+    together [[
+      "cargo", "grado", "# cargos",
+      'salario', 'remuneraciones', 'contribuciones', 'prestaciones',
+      "gasto total" ]]
+    . copy()
+    . applymap ( nullish ) )
+  together["nullish"] = df.all ( axis = "columns" )
+    # I'm defining that so it can be inspected if need be.
 
-  together["good"] = (
+if True: # Drop some things.
+  together = together[ together["nullish"] < 1 ]
+  together = together.drop (
+    columns = ["nullish","something negative","Excel file"] )
+
+if True:
+  print ( "\nRows with missing \"# cargos\":\n",
+          together [ together ["# cargos"]
+                     . isnull () ] )
+
+if True: # Build, examine synthetic gasto total.
+  together = defs.add_synthetic_total (together)
+
+  together["gasto total consistent"] = (
     together . apply (
       lambda row: near ( row["gasto total"],
                          row["gasto total synth"],
@@ -43,16 +66,12 @@ if True: # examine synthetic gasto total
       axis = "columns" )
     . astype ( int ) )
 
-together [["cargo",
-           # "grado",
-           "# cargos",
-           # "sueldo basico",
-           "salario",
-           "remuneraciones",
-           "contribuciones",
-           "prestaciones",
-           "gasto total",
-           # "Excel file",
-           "agency",
-           "gasto total synth",
-           "good", ]]
+  inconsistent = together [ together["gasto total consistent"] < 1 ]
+  print ( "\n# of inconsistent rows:\n",
+          len (inconsistent) )
+  print ( "\n# of agencies with inconsistent rows:\n",
+          len ( inconsistent ["agency"]
+                . unique () ) )
+  print ( "\nInconsistent rows:\n",
+          inconsistent [[ "agency", "cargo",
+                          "gasto total", "gasto total synth" ]] )

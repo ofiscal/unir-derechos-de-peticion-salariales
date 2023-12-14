@@ -1,13 +1,13 @@
 from   os import path
-import pdb
+import pandas as pd
 import re
 #
 from   python.explore.successes.defs import column_name_regexes
 from   python.util import near
 
 
-column_names = list ( column_name_regexes.keys()
-cop_columns = column_names )[3:]
+column_names = list ( column_name_regexes.keys() )
+cop_columns = column_names [3:]
 
 def add_synthetic_total (df : pd.DataFrame) -> pd.DataFrame:
   df [ "gasto total synth"] = (
@@ -40,7 +40,6 @@ def agencies_at_each_quantile_of_each_numeric_var (
     for q in quantiles: # a quantile
       qcop = together[cn] . quantile (q) # a COP value
       res.loc [ q, cn ] = qcop
-      # pdb.set_trace()
       nearest_below_index = (
         # There might be no value for which together[cn]
         # is exactly equal to qcop,
