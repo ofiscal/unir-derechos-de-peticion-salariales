@@ -1,18 +1,6 @@
 # Explore `together : pd.DataFrame`
 
-## Negative values
-
-Which agencies give negative values?
-What do those rows look like?
-
-## Do the four subtotals sum to the total?
-
-## The rows where `# cargos == 0`
-
-What do they look like?
-Where do they come from?
-
-## Empty rows
+## Remaining empty rows
 
 What do they look like?
 Where do they come from?

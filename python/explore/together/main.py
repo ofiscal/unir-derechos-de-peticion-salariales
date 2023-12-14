@@ -18,7 +18,7 @@ if True: # Define `together`.
                 "rb") as handle:
       together = pickle . load ( handle )
 
-if True: # determine which agencies have negative COP values
+if True: # Determine which agencies have negative COP values.
   together["something negative"] = (
     ( (together ["sueldo basico" ] < 0) |
       (together ["salario"]        < 0) |
@@ -33,6 +33,11 @@ if True: # determine which agencies have negative COP values
             [ together ["something negative"] > 0 ]
             ["agency"] . unique() ) )
 
+  print ( "\nRows with something negative:\n",
+          ( together [ together["something negative"]
+                       . astype(bool) ]
+            . transpose () ) )
+
 if True: # Identify most of the "nullish" rows.
   df = (
     together [[
@@ -44,10 +49,12 @@ if True: # Identify most of the "nullish" rows.
   together["nullish"] = df.all ( axis = "columns" )
     # I'm defining that so it can be inspected if need be.
 
-if True: # Drop some things.
+if False: # Drop some things.
   together = together[ together["nullish"] < 1 ]
   together = together.drop (
-    columns = ["nullish","something negative","Excel file"] )
+    columns = ["nullish",
+               #"something negative",
+               "Excel file"] )
 
 if True:
   print ( "\nRows with missing \"# cargos\":\n",
@@ -75,3 +82,14 @@ if True: # Build, examine synthetic gasto total.
   print ( "\nInconsistent rows:\n",
           inconsistent [[ "agency", "cargo",
                           "gasto total", "gasto total synth" ]] )
+
+print (
+  "\ngasto is the sum over all persons in that cargo. Witness a description of gasto total / # cargos:\n",
+  ( ( together["gasto total"] /
+      together["# cargos"] )
+    . describe () ) )
+
+print ( "\nNumber of cargos occupied in this data:\n",
+        together["# cargos"] . sum() )
+
+together.to_excel ( "together.xlsx" )
