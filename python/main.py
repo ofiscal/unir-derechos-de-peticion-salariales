@@ -22,8 +22,8 @@ from    python.types                   import *
 
 
 # CONFIGURE THESE
-recon_strategy     = Definition_Strategy.Load_from_pickle
-successes_strategy = Definition_Strategy.Load_from_pickle
+recon_strategy     = Definition_Strategy.Create
+successes_strategy = Definition_Strategy.Create
 
 
 if True: # Define `recon_reports` which states which sheets look friendly.

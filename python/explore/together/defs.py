@@ -1,7 +1,22 @@
+from   os import path
 import pdb
 import re
-from os import path
+#
+from   python.explore.successes.defs import column_name_regexes
+from   python.util import near
 
+
+column_names = list ( column_name_regexes.keys()
+cop_columns = column_names )[3:]
+
+def add_synthetic_total (df : pd.DataFrame) -> pd.DataFrame:
+  df [ "gasto total synth"] = (
+    df [[ 'salario',
+          'remuneraciones',
+          'contribuciones',
+          'prestaciones', ]]
+    . sum ( axis = "columns" ) )
+  return df
 
 def agencies_at_each_quantile_of_each_numeric_var (
     together : pd.DataFrame, # all agencies we can read

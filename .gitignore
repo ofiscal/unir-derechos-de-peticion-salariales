@@ -2,7 +2,6 @@
 data/input/agency_responses/*/
 .emacs.desktop*
 git-comment*
-temp*
 *.pyc
 TAGS*
 data/output/
