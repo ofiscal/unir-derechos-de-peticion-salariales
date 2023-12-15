@@ -22,8 +22,8 @@ from    python.types                   import *
 
 
 # CONFIGURE THESE
-recon_strategy     = Definition_Strategy.Create
-successes_strategy = Definition_Strategy.Create
+recon_strategy     = Definition_Strategy.Load_from_pickle
+successes_strategy = Definition_Strategy.Load_from_pickle
 
 
 if True: # Define `recon_reports` which states which sheets look friendly.
@@ -109,3 +109,6 @@ for (name, obj) in [
     pickle.dump ( obj,
                   handle,
                   protocol = pickle.HIGHEST_PROTOCOL )
+
+together.to_excel ( "together.xlsx",
+                    index = False )

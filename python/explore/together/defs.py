@@ -2,12 +2,9 @@ from   os import path
 import pandas as pd
 import re
 #
-from   python.explore.successes.defs import column_name_regexes
+import python.explore.successes.defs as successes_defs
 from   python.util import near
 
-
-column_names = list ( column_name_regexes.keys() )
-cop_columns = column_names [3:]
 
 def add_synthetic_total (df : pd.DataFrame) -> pd.DataFrame:
   df [ "gasto total synth"] = (
@@ -22,21 +19,15 @@ def agencies_at_each_quantile_of_each_numeric_var (
     together : pd.DataFrame, # all agencies we can read
 ) -> pd.DataFrame:
 
-  cop_cols : List[str] = (
-    list (
-      defs.column_name_regexes . keys() )
-    [2:] )
   quantiles = [0,0.25,0.5,0.75,1]
   res = pd.DataFrame (
     [],
     columns = [ x
-                for cn in cop_cols
+                for cn in successes_defs . cop_columns
                 for x in [cn, cn + " file"] ],
     index = quantiles )
 
-  for cn in (
-      list ( defs.column_name_regexes . keys() )
-      [2:] ): # The first two aren't floats.
+  for cn in successes_defs . num_columns:
     for q in quantiles: # a quantile
       qcop = together[cn] . quantile (q) # a COP value
       res.loc [ q, cn ] = qcop

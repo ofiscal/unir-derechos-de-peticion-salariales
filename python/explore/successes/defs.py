@@ -8,12 +8,17 @@ from   python.types import *
 
 
 column_name_regexes : Dict [ str, str ] =  {
+  # PITFALL: The order of this dictionary
+  # matters for the definitions of these variables:
+  #   column_names
+  #   cop_columns
+  #   num_columns
   "cargo" : ( ".*"                                +
               ".*".join ( [ "denom.*cargo"
                             for _ in range(4) ] ) +
               ".*" )                                         ,
-  # "nivel 1"        : "empleado kind 1"                       ,
-  # "nivel 2"        : "empleado kind 2"                       ,
+  "nivel 1"        : "empleado kind 1"                       ,
+  "nivel 2"        : "empleado kind 2"                       ,
   "grado"          : "grado[^-]*"                            ,
   "# cargos"       : "no.*cargo.*:3$"                        ,
   "sueldo basico"  : ".*b.sico.*anual.*"                     ,
@@ -23,6 +28,15 @@ column_name_regexes : Dict [ str, str ] =  {
   "prestaciones"   : "prestac.*social.*relac.*total.*"       ,
   "gasto total"    : ".*total.*:.*gastos.*:.*personal.*"     ,
 }
+
+column_names = list ( column_name_regexes.keys() )
+cop_columns = column_names [-6:] # the last 6 columns are COP-valued
+num_columns = (
+  [ "# cargos",
+    # "grado", # TODO: Supposed to be numeric, but needs much cleaning.
+   ] +
+  column_names [-6:] )
+
 
 def mk_colnames_by_file ( successes : pd.DataFrame
                          ) ->         pd.DataFrame:

@@ -2,7 +2,7 @@ import pandas as pd
 import re
 from   typing import *
 #
-import python.explore.successes.defs as defs
+import python.explore.successes.defs as successes_defs
 import python.paths as paths
 from   python.types import *
 from   python.util import str_to_float
@@ -14,22 +14,22 @@ def join_successfully_read_excel_files (
     ) -> pd.DataFrame:
 
   colnames_by_file : pd.DataFrame = \
-    defs.mk_colnames_by_file ( successes )
+    successes_defs.mk_colnames_by_file ( successes )
 
   extra_nice : List[str] = list (
-    defs.spreadsheets_with_1_match_to_each_expr (
+    successes_defs.spreadsheets_with_1_match_to_each_expr (
       colnames_by_file = colnames_by_file,
-      exprs = list ( defs.column_name_regexes
+      exprs = list ( successes_defs.column_name_regexes
                      . values () )
     ) )
 
-  together : pd.DataFrame = defs.subset_columns_by_regex_and_concatenate (
-    dfs_by_file = { k : successes[k]
-                    for k in extra_nice },
-    exprs = defs.column_name_regexes )
+  together : pd.DataFrame = (
+    successes_defs.subset_columns_by_regex_and_concatenate (
+      dfs_by_file = { k : successes[k]
+                      for k in extra_nice },
+      exprs = successes_defs.column_name_regexes ) )
 
-  for colname in ( list ( defs.column_name_regexes . keys() )
-                   [2:] ): # The first two aren't floats.
+  for colname in successes_defs.num_columns:
     together[colname] = str_to_float (
       together[colname] )
 
